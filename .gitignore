@@ -1,0 +1,14 @@
+.DS_Store
+.dev.vars
+.wrangler/
+dev-dist/
+dist/
+node_modules/
+test/*.png
+test/page.html
+worker/node_modules/
+worker/.wrangler/
+worker/.dev.vars
+tools/load-result.json
+.claude/
+press/

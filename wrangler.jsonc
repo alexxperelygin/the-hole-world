@@ -1,0 +1,13 @@
+{
+  // Cloudflare Workers static-assets deploy of the Vite build. Phase 2 adds the API worker in worker/ with its own config.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "the-hole-world",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "routes": [{ "pattern": "thehole.world", "custom_domain": true }, { "pattern": "www.thehole.world", "custom_domain": true }],
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application",
+    "html_handling": "auto-trailing-slash"
+  }
+}

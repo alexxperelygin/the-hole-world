@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Hole World</title>
+<meta name="description" content="The whole world digs one hole. Tap to dig through the Earth from your country and come out on the other side.">
+<meta name="theme-color" content="#1b120d">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="The Hole World">
+<meta property="og:title" content="The Hole World · The whole world digs one hole">
+<meta property="og:description" content="Tap to dig through the real layers of the Earth from your country. Every meter counts for your nation.">
+<meta property="og:url" content="https://thehole.world/">
+<meta property="og:image" content="https://thehole.world/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Hole World">
+<meta name="twitter:description" content="Tap to dig through the Earth. Every meter counts for your country.">
+<meta name="twitter:image" content="https://thehole.world/og.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&family=Unbounded:wght@500;700;900&display=swap">
+<style>[hidden]{display:none!important}body{margin:0;background:#1b120d}</style>
+</head>
+<body>
+<div id="app">
+  <header class="hud band">
+    <div class="hud-in">
+      <button id="btnCountry" class="flag-btn" type="button" aria-label="Country"></button>
+      <div class="coins" aria-live="off"><span class="coin" aria-hidden="true"></span><b id="coins">0</b></div>
+      <button id="btnSound" class="icon-btn" type="button" aria-label="Sound"></button>
+      <button id="btnSettings" class="icon-btn" type="button" aria-label="Settings">⚙︎</button>
+      <button id="btnGold" class="gold-btn" type="button"><span id="goldLabel">GOLD</span></button>
+    </div>
+  </header>
+
+  <section class="scene" id="scene" aria-label="Dig">
+    <canvas id="cv"></canvas>
+    <div class="readout">
+      <div class="depth" id="depth">0 m</div>
+      <div class="layer-line"><span id="layerName"></span><span class="next" id="nextInfo"></span></div>
+      <div class="bar"><i id="layerBar"></i></div>
+      <div class="core" id="coreInfo"></div>
+      <div class="nextms" id="nextMs"></div>
+    </div>
+    <button class="journey" id="journey" type="button" aria-label="Journey"><span class="jf" id="jFrom"></span><span class="jbar" id="jBar"><i id="jPos"></i></span><span class="jt" id="jTo"></span></button>
+    <div class="combo" id="combo" hidden></div>
+    <div class="hint" id="hint"><span class="hand" id="hintHand"></span><span id="hintText"></span></div>
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+    <button class="nugget" id="nugget" type="button" hidden aria-label="Gold nugget"></button>
+    <div class="banner" id="banner" hidden></div>
+    <button class="tired" id="tired" type="button" hidden></button>
+  </section>
+
+  <div class="ticker band"><div class="ticker-in" id="ticker"></div><div class="wbar" aria-hidden="true"><i id="wBar"></i></div></div>
+
+  <nav class="panel band">
+    <button class="qstrip" id="quests" type="button"><span class="qe" id="qE"></span><span class="qt" id="qT"></span><span class="qbar"><i id="qBar"></i></span><span class="qr" id="qR"></span></button>
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" data-tab="tools" class="tab on"><span class="ti" data-e="⛏️"></span><span data-t="tab_tools"></span></button>
+      <button type="button" role="tab" data-tab="helpers" class="tab"><span class="ti" data-e="🐶"></span><span data-t="tab_helpers"></span></button>
+      <button type="button" role="tab" data-tab="finds" class="tab"><span class="ti" data-e="🏺"></span><span data-t="tab_finds"></span><b class="dot" id="findsDot" hidden></b></button>
+      <button type="button" role="tab" data-tab="world" class="tab"><span class="ti" data-e="🌍"></span><span data-t="tab_world"></span></button>
+    </div>
+    <div class="panes">
+      <div class="pane" id="pane-tools"></div>
+      <div class="pane" id="pane-helpers" hidden></div>
+      <div class="pane" id="pane-finds" hidden></div>
+      <div class="pane" id="pane-world" hidden></div>
+    </div>
+  </nav>
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
+</div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

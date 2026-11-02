@@ -1,0 +1,27 @@
+{
+  "name": "the-hole-world",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "The whole world digs one hole. Viral tap-to-dig incremental game.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173 --strictPort",
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "VITE_API_BASE=http://127.0.0.1:9 vite build && node test/run.js",
+    "sim": "node tools/sim.js 5 0",
+    "assets": "node tools/assets.mjs",
+    "deploy": "vite build && wrangler deploy",
+    "deploy:api": "cd worker && npx wrangler -c wrangler.toml deploy"
+  },
+  "devDependencies": {
+    "emoji-datasource-google": "^16.0.0",
+    "playwright": "^1.47.0",
+    "typescript": "^5.9.0",
+    "vite": "^8.0.0",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^5.0.0"
+  }
+}
