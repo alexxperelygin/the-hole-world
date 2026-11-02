@@ -486,7 +486,8 @@ function frame(ts: number) {
 async function boot(reset: boolean) {
   if (!reset) { const saved = loadSaved(); if (saved) setState(saved); }
   // landing page thehole.world/<cc> (site/worker.ts) or ?c=<CC>: a new player digs for that country from the first tap
-  const landing = ((window as unknown as { __landingCC?: string }).__landingCC || new URLSearchParams(location.search).get('c') || '').toUpperCase();
+  const pathCC = /^\/([a-z]{2})\/?$/i.exec(location.pathname)?.[1] || '';   // the SW may serve the plain shell for /<cc>, so read the path too
+  const landing = ((window as unknown as { __landingCC?: string }).__landingCC || new URLSearchParams(location.search).get('c') || pathCC).toUpperCase();
   if (S.taps === 0 && S.lifetime === 0 && ANTI[landing]) S.country = landing;
   if (!S.country || !ANTI[S.country]) S.country = detectCountry();
   if (!S.ref) S.ref = makeRefCode();
