@@ -3,6 +3,7 @@
    Units (Phase 5): tools and helpers produce EFFORT per second; a layer's `hard` says how much effort one meter costs.
    Coins are paid per meter (× layer val). The server counts effort (what v1 called meters), so the anti-cheat ceilings are unchanged. */
 import { CFG, type Config, type Layer, type World } from './config.ts';
+import { ITEMS } from './pay-plans.ts';
 
 export interface EconState {
   depth: number; coins: number; tool: number; helpers: number[]; stars: number; crew: boolean;
@@ -10,6 +11,8 @@ export interface EconState {
   boost?: boolean;    // world-hole season finished: ×2 for 24 h
   world?: number;     // index into CFG.worlds (0 = Earth)
   lap?: number;       // how many times the world list has been completed
+  dyn?: boolean;      // a stick of dynamite is burning (×10 for 60 s, server-confirmed)
+  cboost?: boolean;   // the player's country is boosted (×2 for an hour, paid by someone)
 }
 export interface LayerInfo { i: number; far: boolean; val: number; hard: number; layer: Layer; seg: number }
 export interface Bound { d: number; i: number; far: boolean; center?: boolean; out?: boolean }
@@ -60,7 +63,7 @@ export function prevBound(d: number, B: Bound[] = BOUNDS): number { let p = 0; f
 
 /* multipliers */
 export const prestigeMult = (stars: number, cfg: Config = CFG) => Math.pow(cfg.prestigeBase, Math.max(0, stars));
-export const mult = (s: Pick<EconState, 'stars' | 'crew' | 'boost'>, cfg: Config = CFG) => prestigeMult(s.stars, cfg) * (s.crew ? cfg.crewMult : 1) * (s.boost ? cfg.world.boostMult : 1);
+export const mult = (s: Pick<EconState, 'stars' | 'crew' | 'boost' | 'dyn' | 'cboost'>, cfg: Config = CFG) => prestigeMult(s.stars, cfg) * (s.crew ? cfg.crewMult : 1) * (s.boost ? cfg.world.boostMult : 1) * (s.dyn ? ITEMS.dynamite.mult : 1) * (s.cboost ? ITEMS.boost.mult : 1);
 export const friendsMult = (friends: number | undefined, cfg: Config = CFG) => 1 + cfg.referral.idlePctPerFriend * Math.min(cfg.referral.maxFriends, Math.max(0, friends || 0));
 /* effort per tap / per second (what the server sees as "meters") */
 export const tapPow = (s: EconState, cfg: Config = CFG) => cfg.tools[s.tool].pow * mult(s, cfg);

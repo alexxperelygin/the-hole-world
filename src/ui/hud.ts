@@ -50,7 +50,8 @@ export function updateHud(inp: HudInput) {
   const toCore = S.world ? t('to_center_of', { w: t('worlds.' + worldNow().id) }) : t('to_core');
   $('#coreInfo').textContent = (pct < 0.01 ? '<0.01' : pct < 10 ? nf(pct, 2) : nf(pct, 1)) + '% ' + (far ? t('to_out') : toCore) + (S.stars ? '  ·  ★' + S.stars : '') + (S.world || S.lap ? '  ·  ' + worldNow().e : '') + (S.boost ? '  ·  ×' + CFG.world.boostMult + ' 🌍' : '');
   const c = $('#combo');
-  if (inp.frenzy) { c.hidden = false; c.textContent = t('frenzy', { x: CFG.nugget.frenzyMult }); }
+  if (S.dyn) { c.hidden = false; c.textContent = '🧨 ×' + (inp.frenzy ? CFG.nugget.frenzyMult * 10 : 10); }
+  else if (inp.frenzy) { c.hidden = false; c.textContent = t('frenzy', { x: CFG.nugget.frenzyMult }); }
   else if (inp.combo >= 5 && performance.now() - inp.lastTap < 700) { c.hidden = false; c.textContent = '×' + nf(comboMult(inp.combo), 1); }
   else c.hidden = true;
   $('#goldLabel').textContent = S.crew ? t('gold_on') : t('gold'); $('#btnGold').classList.toggle('on', S.crew);
@@ -70,6 +71,8 @@ function updateTicker() {
   else if (tickerPhase === 1 && w.season) {
     const d = w.season.depth; const left = Math.max(0, CFG.earthR - d);
     html = `${em('🕳️')} ${esc(t('world_hole'))} <b>${esc(fmtM(d))}</b> · ${esc(w.season.doneAt ? t('boost_on') : t('to_core_left', { d: fmtM(left) }))}`;
+  } else if (tickerPhase === 0 && S.cboostUntil > tms && Math.floor(tms / 5000) % 2 === 0) {
+    html = `${em('🚀')} ${flag(S.country)} <b>×2</b> · ${esc(S.cboostBy || '')} · ${Math.max(1, Math.round((S.cboostUntil - tms) / 60000))} ${esc(t('min'))}`;
   } else html = `${em('🌍')} ${esc(t('world_total'))} <b>${esc(fmtBig(w.total))}</b>` + (lead ? ` · ${flag(lead.cc)} #1` : '') + (rank > 1 ? ` · ${flag(S.country)} <b>#${rank}</b>` : '');
   if (w.demo) html += ` · <span>${esc(t('demo_short'))}</span>`;
   const el = $('#ticker'); if (el.dataset.h !== html) { el.dataset.h = html; el.innerHTML = html; }

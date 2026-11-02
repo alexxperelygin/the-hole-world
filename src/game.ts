@@ -20,8 +20,8 @@ import { questLabel, fmtDur } from './ui/panel';
 import { incomingRef, isTelegram, tgLang, openUrl, tg } from './platform/telegram';
 import * as net from './net';
 import { fromSaved } from './state';
-import { PASSES, STARS_PRICE } from './pay-plans';
-import { createCheckout, consumePaidReturn, debugFlag, waitForGold } from './pay';
+import { PASSES, STARS_PRICE, ITEMS, isItem, type ItemId } from './pay-plans';
+import { createCheckout, consumePaidReturn, debugFlag, waitForGold, waitForItem, setPending, takePending } from './pay';
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector(s) as T;
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
@@ -195,22 +195,37 @@ function openGold(source = 'button', ctx: Record<string, string> = {}) {
     <div class="btns">${isTelegram()
       ? `<button class="btn primary" type="button" data-act="pay" data-m="stars">${em('⭐')} ${esc(t('pay_stars'))}</button>`   /* digital goods inside Telegram: Stars only */
       : `<button class="btn primary" type="button" data-act="pay" data-m="card">${esc(t('pay_card'))}</button><button class="btn" type="button" data-act="pay" data-m="crypto">${esc(t('pay_crypto'))}</button>`}</div>
+    <div class="sec-label" style="margin-top:6px">${esc(t('shop_once'))}</div>
+    <div class="shop">${shopItem('dynamite')}${shopItem('boost')}</div>
     <div class="note" id="payNote" hidden></div>
     <p class="hint-text">${esc(t('gold_country'))} ${esc(t('under18'))}</p>
     ${TEST_PAY ? `<button class="btn" type="button" data-act="gold-test">${esc(S.crew ? t('test_off') : t('test_try'))}</button>` : ''}
     <button class="btn" type="button" data-act="close" data-focus>${esc(t('close'))}</button>`);
   paySource = source;
 }
+/* one-off items in the shop: a pack of dynamite, a boost for the whole country. Card on the web, Stars inside Telegram. */
+function shopItem(item: ItemId) {
+  const it = ITEMS[item]; const own = S.inv[item] || 0;
+  const title = item === 'dynamite' ? t('item_dynamite', { n: ITEMS.dynamite.qty }) : t('item_boost', { c: countryName(S.country) });
+  const desc = item === 'dynamite' ? t('item_dynamite_desc', { x: ITEMS.dynamite.mult, s: ITEMS.dynamite.secs }) : t('item_boost_desc', { x: ITEMS.boost.mult, h: ITEMS.boost.hours });
+  const buy = isTelegram()
+    ? `<button class="buy can" type="button" data-act="pay" data-m="stars" data-item="${item}">${em('⭐')}<span>${it.stars}</span></button>`
+    : `<button class="buy can" type="button" data-act="pay" data-m="card" data-item="${item}"><span>$${it.usd}</span></button>`;
+  return `<div class="row item"><div class="re">${em(it.e)}</div><div><div class="rn">${esc(title)}${own ? `<span class="count">×${own}</span>` : ''}</div><div class="rs">${esc(desc)}</div></div>${buy}</div>`;
+}
 /* the free test toggle exists only in dev builds and behind ?debug=1; the server resets the flag on the next session anyway */
 const TEST_PAY = import.meta.env.DEV || debugFlag();
 let paySource = 'button';
 function payNote(msg: string) { const n = sheetEl().querySelector<HTMLElement>('#payNote'); if (!n) return; n.textContent = msg; n.hidden = false; n.animate && n.animate([{ transform: 'scale(1.03)' }, { transform: 'scale(1)' }], 250); }
 /* card / Apple Pay / Google Pay: Polar hosted checkout, the buyer is our userId (customer_external_id) */
-async function payCard() {
+async function payCard(item: ItemId | null = null) {
   let uid = net.userId(); if (!uid) { const s = await net.connect(); uid = s?.userId || null; }
   if (!uid) { payNote(t('pay_offline')); return; }
   payNote(t('pay_return'));
-  openUrl(await createCheckout(uid, paySource));
+  const url = await createCheckout(uid, paySource, item);
+  if (!url) { payNote(t('pay_unavailable')); return; }
+  setPending(item, item ? S.inv[item] || 0 : 0);
+  openUrl(url);
 }
 /* crypto: pick a prepaid pass, the worker creates a NOWPayments invoice */
 function openPasses() {
@@ -228,16 +243,17 @@ async function payCrypto(days: number, btn: HTMLElement) {
   openUrl(inv.url); payNote(t('pay_return'));
 }
 /* Telegram Stars (SPEC §4.4): the worker makes an invoice link, Telegram.WebApp.openInvoice shows the native sheet; on "paid" the bot webhook has (or is about to have) granted Gold */
-async function payStars(btn: HTMLElement) {
+async function payStars(btn: HTMLElement, item: ItemId | null = null) {
   const w = tg(); if (!w || !w.openInvoice) { payNote(t('pay_unavailable')); return; }
   btn.setAttribute('disabled', ''); payNote(t('pay_wait'));
-  const inv = await net.createStarsInvoice();
+  const inv = await net.createStarsInvoice(item || undefined);
   btn.removeAttribute('disabled');
   if (!inv) { payNote(net.isOnline() ? t('pay_unavailable') : t('pay_offline')); return; }
-  track('checkout_start', { method: 'stars' });
+  track('checkout_start', { method: 'stars', item: item || 'gold' });
+  const before = item ? S.inv[item] || 0 : 0;
   try {
     w.openInvoice(inv.url, status => {
-      if (status === 'paid') { closeModal(true); afterPayment(); }
+      if (status === 'paid') { closeModal(true); if (item) afterItem(item, before); else afterPayment(); }
       else if (status === 'cancelled') payNote(t('pay_cancelled'));
       else if (status === 'failed') payNote(t('pay_failed'));
     });
@@ -251,6 +267,49 @@ async function cancelStars(btn: HTMLElement) {
   track('subscription_cancel', { method: 'stars' });
   save(); renderPane(true); hud(); openSettings();
   toast('⭐', t('gold_title'), t('stars_cancel_done', { d: new Date(a.until).toLocaleDateString(lang) }), '#ffc21a');
+}
+/* an item pack was paid: wait for the webhook to land it in the inventory, then show it */
+async function afterItem(item: ItemId, before: number) {
+  toast(ITEMS[item].e, t('pay_checking'), '', '#ffc21a');
+  const ok = await waitForItem(item, before);
+  save(); renderPane(true); updateDyn();
+  if (ok) { track('purchase', { item }); toast(ITEMS[item].e, t('item_got', { n: ITEMS[item].qty }), item === 'boost' ? t('boost_hint_use') : t('dyn_hint_use'), '#ffc21a'); }
+  else toast('⏳', t('gold_title'), t('pay_pending'), '#b8a493');
+}
+/* ---------------- dynamite & country boost (Phase 5) ---------------- */
+const dynBtn = $('#dyn') as HTMLButtonElement;
+function updateDyn() {
+  const now = Date.now(); const lit = S.dynUntil > now; const own = S.inv.dynamite || 0;
+  if (!lit && !own) { dynBtn.hidden = true; return; }
+  dynBtn.hidden = false; dynBtn.classList.toggle('lit', lit);
+  dynBtn.innerHTML = lit ? `${em('🧨')} ×${ITEMS.dynamite.mult} · ${Math.ceil((S.dynUntil - now) / 1000)}s` : `${em('🧨')} ×${own}`;
+}
+async function lightDynamite() {
+  if (S.dynUntil > Date.now()) return;
+  if (!(S.inv.dynamite > 0)) { openGold('dynamite'); return; }
+  dynBtn.setAttribute('disabled', '');
+  const r = await net.useDynamite(); dynBtn.removeAttribute('disabled');
+  if (!r) { toast('🧨', t('pay_offline'), '', '#b8a493'); return; }
+  S.dynUntil = r.until; S.dyn = true; save(); updateDyn(); track('dynamite', {});
+  Snd.boom(); buzz(50); scene.kick(14); toast('🧨', t('dyn_lit', { x: ITEMS.dynamite.mult, s: ITEMS.dynamite.secs }), '', '#ff9b3d');
+}
+function openBoost() {
+  if (!(S.inv.boost > 0)) { openGold('boost'); return; }
+  openModal(`<div class="emo">${em('🚀')}</div><h2 style="text-align:center">${esc(t('item_boost', { c: countryName(S.country) }))}</h2>
+    <p style="text-align:center">${esc(t('item_boost_desc', { x: ITEMS.boost.mult, h: ITEMS.boost.hours }))}</p>
+    <label class="set-col"><span>${esc(t('nick_title'))}</span><input class="search" id="nick" type="text" maxlength="16" autocomplete="nickname" value="${esc(S.nick || '')}" placeholder="${esc(t('nick_hint'))}" data-focus></label>
+    <div class="note" id="payNote" hidden></div>
+    <div class="btns"><button class="btn primary" type="button" data-act="boost-go">${em('🚀')} ${esc(t('boost_go', { c: countryName(S.country) }))}</button><button class="btn" type="button" data-act="close">${esc(t('close'))}</button></div>`);
+}
+async function fireBoost(btn: HTMLElement) {
+  const input = sheetEl().querySelector<HTMLInputElement>('#nick'); const nick = (input?.value || '').trim().replace(/\s+/g, ' ');
+  if (!/^[\p{L}\p{N}_ .-]{2,16}$/u.test(nick)) { payNote(t('nick_bad')); input?.focus(); return; }
+  btn.setAttribute('disabled', ''); payNote(t('pay_wait'));
+  const r = await net.boostCountry(nick); btn.removeAttribute('disabled');
+  if (!r) { payNote(net.isOnline() ? t('pay_unavailable') : t('pay_offline')); return; }
+  S.cboostUntil = r.until; S.cboostBy = nick; S.cboost = true; save(); closeModal(true); renderPane(true); hud();
+  Snd.boom(); buzz(60); scene.kick(16); track('boost_fire', {});
+  toast('🚀', t('boost_done', { c: countryName(S.country) }), t('boost_active', { n: nick }), '#ffc21a');
 }
 /* back from the checkout with ?paid=1: ask the server until it says Gold is on (≤ 60 s) */
 async function afterPayment() {
@@ -311,9 +370,11 @@ onAction((a, b) => {
   else if (a === 'legal') openUrl(b.dataset.href || '/');
   else if (a === 'gold-test') { S.crew = !S.crew; save(); closeModal(true); toast('🪙', t('gold_title'), S.crew ? '×' + CFG.crewMult : t('off'), '#ffc21a'); renderPane(true); }
   else if (a === 'pay') {
-    const m = b.dataset.m || ''; track('checkout_start', { method: m });
-    if (m === 'card') payCard(); else if (m === 'crypto') openPasses(); else payStars(b);
+    const m = b.dataset.m || ''; const item = isItem(b.dataset.item) ? b.dataset.item : null; track('checkout_start', { method: m, item: item || 'gold' });
+    if (m === 'card') payCard(item); else if (m === 'crypto') openPasses(); else payStars(b, item);
   }
+  else if (a === 'boost') openBoost();
+  else if (a === 'boost-go') fireBoost(b);
   else if (a === 'pass') payCrypto(+(b.dataset.days || 30), b);
   else if (a === 'lang') { S.lang = b.dataset.v || 'en'; applyLang(S.lang).then(openSettings); }
   else if (a === 'snd') { S.sound = b.dataset.v === '1'; openSettings(); }
@@ -386,6 +447,7 @@ $('#journey').addEventListener('pointerdown', e => e.stopPropagation());
 $('#journey').addEventListener('click', openJourney);
 $('#quests').addEventListener('click', openQuests);
 $('#tired').addEventListener('pointerdown', e => e.stopPropagation());
+dynBtn.addEventListener('pointerdown', e => e.stopPropagation()); dynBtn.addEventListener('click', () => lightDynamite());
 $('#tired').addEventListener('click', () => openGold('fatigue'));
 document.querySelectorAll<HTMLElement>('.tab').forEach(b => b.addEventListener('click', () => selectTab(b.dataset.tab || 'tools')));
 $('.panes').addEventListener('click', e => {
@@ -394,6 +456,7 @@ $('.panes').addEventListener('click', e => {
   else if (b.dataset.buy === 'h') buyHelper(+(b.dataset.i || 0), b);
   else if (b.dataset.act === 'country') openCountry();
   else if (b.dataset.act === 'gold') openGold(b.dataset.src || 'panel');
+  else if (b.dataset.act === 'boost') openBoost();
   else if (b.dataset.rank) setRankMode(b.dataset.rank as RankMode);
 });
 onInstallChange(() => { /* buttons are rendered on demand; nothing to refresh */ });
@@ -403,6 +466,8 @@ const hud = () => updateHud({ combo, lastTap, frenzy: performance.now() < frenzy
 let lastFrame = performance.now(), lastHud = 0, lastAfford = 0, lastWorld = 0, lastDay = 0, lastNet = 0;
 function frame(ts: number) {
   const dt = E.clamp((ts - lastFrame) / 1000, 0, 0.1); lastFrame = ts;
+  const nowMs = Date.now(); const dyn = S.dynUntil > nowMs, cb = S.cboostUntil > nowMs;
+  if (dyn !== !!S.dyn || cb !== !!S.cboost) { S.dyn = dyn; S.cboost = cb; renderPane(true); }
   const ir = E.idleRate(S); if (ir > 0) addMeters(ir * dt);
   if (ts - lastTap > CFG.comboWindow * 1.8) combo = Math.max(0, combo - 60 * dt);
   scene.camera(dt);
@@ -410,7 +475,7 @@ function frame(ts: number) {
   if (!nug.hidden && ts > nuggetUntil) { nug.hidden = true; nextNugget = ts + rnd(CFG.nugget.minGap, CFG.nugget.maxGap) * 1000; }
   if (nug.hidden && ts > nextNugget && !modalOpen() && S.taps > 10) spawnNugget();
   tickFatigue(dt, ts);
-  if (ts - lastHud > 66) { lastHud = ts; hud(); updateTired(); }
+  if (ts - lastHud > 66) { lastHud = ts; hud(); updateTired(); updateDyn(); }
   if (ts - lastDay > 30000) { lastDay = ts; if (Q.ensureToday()) renderPane(true); }
   if (ts - lastNet > 1000) { lastNet = ts; net.tick(Date.now(), tab === 'world'); }
   if (ts - lastAfford > 250) { lastAfford = ts; renderPane(false); if (tab === 'world' && ts - lastWorld > 3000) { lastWorld = ts; renderPane(true); } }
@@ -434,7 +499,8 @@ async function boot(reset: boolean) {
   updateHint(); save();
   if (S.depth >= W().through) breakthrough();
   net.connect(); // live world: never blocks the first tap; the demo ranking shows until the session answers
-  if (!reset && consumePaidReturn()) afterPayment();
+  if (!reset && consumePaidReturn()) { const p = takePending(); if (p) afterItem(p.item, p.before); else afterPayment(); }
+  updateDyn();
 }
 /* ---------------- live world (SPEC §2.5, §3.2) ---------------- */
 function pickCountry(cc: string) {

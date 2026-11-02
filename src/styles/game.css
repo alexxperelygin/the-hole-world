@@ -278,6 +278,12 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--hazard); ou
 /* Fatigue chip */
 .tired { position: absolute; left: var(--gutter-l); bottom: 12px; display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; background: rgba(18,12,9,.8); border: 1px solid var(--line); font-size: 12px; font-variant-numeric: tabular-nums; z-index: 2; }
 .tired b { color: var(--hazard); }
+.dyn { position: absolute; right: var(--gutter-r); bottom: 12px; display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 999px; background: rgba(18,12,9,.8); border: 1px solid var(--line); font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; z-index: 2; }
+.dyn.lit { background: #ff9b3d; color: #1b120d; border-color: #ff9b3d; animation: glint 0.5s ease-in-out infinite alternate; }
+.dyn[disabled] { opacity: .5; }
+.shop .row.item .rs { font-size: 11px; }
+.boostrow.on { border: 1px solid #ff9b3d; }
+.boostrow .mf { font-size: 26px; }
 
 /* Paywall */
 .perks2 { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

@@ -13,3 +13,13 @@ export const passByDays = (d: number) => PASSES.find(p => p.days === d) || null;
 export const STARS_PRICE = 250;
 export const STARS_PERIOD_S = 2592000;
 export const POLAR_CHECKOUT = 'https://buy.polar.sh/polar_cl_xPtW6Zy007HXdDrdy7EGnjpLQwRR6voU95Z2523exYf';
+/* Consumables (Phase 5): one-off purchases by card (Polar one-time products) or Telegram Stars (non-subscription invoice).
+   dynamite: a pack of sticks, each ×mult to everything for `secs` seconds. boost: ×mult for every player of the buyer's country for `hours`,
+   the buyer's nickname shows in the country's ticker. Crypto passes stay Gold-only. */
+export const ITEMS = {
+  dynamite: { e: '🧨', usd: 1.99, stars: 100, qty: 5, mult: 10, secs: 60 },
+  boost:    { e: '🚀', usd: 2.99, stars: 150, qty: 1, mult: 2, hours: 1 },
+} as const;
+export type ItemId = keyof typeof ITEMS;
+export const isItem = (x: unknown): x is ItemId => x === 'dynamite' || x === 'boost';
+export const NICK_RE = /^[\p{L}\p{N}_ .-]{2,16}$/u;

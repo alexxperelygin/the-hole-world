@@ -3,7 +3,7 @@ import { CFG } from '../config';
 import { S, W, worldNow } from '../state';
 import { t, tl, lang, fmtM, fmtN, fmtBig, nf, esc, countryName } from '../i18n';
 import { tapPow, idleRate, mult, helperCost, hardAt, metersPerTap, metersPerSec } from '../economy';
-import { worldSnapshot, isOnline, type WorldRow } from '../net';
+import { worldSnapshot, isOnline, countryBoost, type WorldRow } from '../net';
 import { popOf } from '../population';
 import { friendsMult } from '../economy';
 import { em, flag } from './emoji';
@@ -93,12 +93,19 @@ function renderWorld() {
   }
   h += `<div class="big-stat"><small>${em('🌍')} ${esc(t('world_total'))}</small><strong id="wTotal">${esc(fmtBig(w.total))}</strong><span id="wThrough">${esc(t('through_x', { n: fmtN(w.total / CFG.through) }))}</span></div>
     <div class="mine"><div class="mf">${flag(S.country)}</div><div class="mt"><b>${esc(t('your_country'))} ${esc(countryName(S.country))} · #${rank || '–'}</b><span>${esc(t('you_add', { m: fmtM(S.lifetime) }))}${S.friends ? ' · ' + em('🤝') + ' ' + esc(t('friends_n', { n: S.friends, p: Math.round((friendsMult(S.friends) - 1) * 100) })) : ''}</span></div><button class="chg" type="button" data-act="country">${esc(t('change'))}</button></div>
+    ${boostRow(now)}
     <div class="seg" role="tablist">${(['all', 'today', 'capita'] as RankMode[]).map(m => `<button type="button" role="tab" class="${m === rankMode ? 'on' : ''}" data-rank="${m}">${esc(t('rank_' + m))}</button>`).join('')}</div>
     <div>`;
   top.forEach(r => { const n = rows.indexOf(r) + 1;
     h += `<div class="rk ${r.cc === S.country ? 'me' : ''}"><div class="n">${n}</div><div class="f">${flag(r.cc)}</div><div class="c"><div>${esc(countryName(r.cc))}</div><i><u style="width:${(max > 0 ? rankValue(r) / max * 100 : 0).toFixed(1)}%"></u></i></div><div class="v">${esc(rankLabel(r))}</div></div>`; });
   h += `</div>${w.demo ? `<div class="demo">${esc(t('demo'))}</div>` : `<div class="demo live">${esc(t('live_world'))}${isOnline() ? '' : ' · ' + esc(t('reconnecting'))}</div>`}`;
   p.innerHTML = h;
+}
+/* paid country boost: who lit it and how long it lasts, or the button to light one (SPEC Phase 5) */
+function boostRow(now: number) {
+  const b = countryBoost(S.country); const active = b && b[0] > now;
+  const btn = `<button class="chg" type="button" data-act="boost">${S.inv.boost > 0 ? em('🚀') + ' ' + esc(t('boost_use')) + ' ×' + S.inv.boost : esc(t('boost_buy'))}</button>`;
+  return `<div class="mine boostrow ${active ? 'on' : ''}"><div class="mf">${em('🚀')}</div><div class="mt"><b>${active ? esc(t('boost_active', { n: b![1] })) + ' · ' + esc(fmtDur((b![0] - now) / 1000)) : esc(t('boost_cta', { c: countryName(S.country) }))}</b><span>${esc(t('item_boost_desc', { x: 2, h: 1 }))}</span></div>${btn}</div>`;
 }
 export function fmtDur(sec: number) { const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60); return h ? `${h} ${t('h')} ${m} ${t('min')}` : `${m} ${t('min')}`; }
 export function questLabel(q: { id: string; target: number }) { return t('quest_' + q.id, { n: q.id === 'meters' ? fmtM(q.target) : String(q.target) }); }

@@ -10,9 +10,11 @@ import { tg } from './platform/telegram';
 
 export interface WorldRow { cc: string; m: number; today: number }
 export interface WorldSeason { n: number; m: number; k: number; depth: number; doneAt: number; boostUntil: number; top: string[] }
-export interface WorldSnapshot { rows: WorldRow[]; total: number; demo: boolean; t: number; season: WorldSeason | null }
-interface Compact { t: number; total: number; day: string; rows: Array<[string, number, number]>; season: WorldSeason }
-export interface SessionInfo { userId: string; token: string; country: string; countryNextChange: number; refCode: string; friends: number; entitlements: { crew: boolean; until: number }; save: { state: string; updated_at: number } | null }
+export type Boosts = Record<string, [until: number, nick: string]>;
+export interface WorldSnapshot { rows: WorldRow[]; total: number; demo: boolean; t: number; season: WorldSeason | null; boosts?: Boosts }
+interface Compact { t: number; total: number; day: string; rows: Array<[string, number, number]>; season: WorldSeason; boosts?: Boosts }
+export interface Inventory { items: { dynamite: number; boost: number }; dynUntil: number; nick: string }
+export interface SessionInfo { userId: string; token: string; country: string; countryNextChange: number; refCode: string; friends: number; entitlements: { crew: boolean; until: number }; inventory?: Inventory | null; save: { state: string; updated_at: number } | null }
 export interface Overtake { a: string; b: string }
 
 const API = ((import.meta.env.VITE_API_BASE as string | undefined) ?? '').replace(/\/$/, '');
@@ -70,6 +72,11 @@ function applySession(info: SessionInfo) {
   S.friends = Math.min(CFG.referral.maxFriends, info.friends || 0);
   if (info.entitlements) S.crew = !!info.entitlements.crew;                      // the server is the source of truth for Gold (SPEC §4.1); the local flag is untrusted
   S.countryNext = info.countryNextChange || 0;
+  if (info.inventory) applyInventory(info.inventory);
+}
+export function applyInventory(inv: Inventory) {
+  if (inv.items) S.inv = { dynamite: Math.max(0, inv.items.dynamite | 0), boost: Math.max(0, inv.items.boost | 0) };
+  S.dynUntil = Number(inv.dynUntil) || 0; if (inv.nick) S.nick = inv.nick;
 }
 /* Player picked a country: the server allows a change once in 7 days and answers with what it recorded. */
 export async function changeCountry(cc: string): Promise<{ country: string; nextChange: number } | null> {
@@ -100,14 +107,30 @@ export function fetchEntitlements(): Promise<Access | null> {
 export function postAuthed(path: string, body: Record<string, unknown>): Promise<Record<string, unknown> | null> {
   return withToken(async tok => { const r = await post(path, { ...body, token: tok }); return r.ok ? r.data : null; });
 }
+/* ---------- consumables (Phase 5) ---------- */
+export function fetchInventory(): Promise<Inventory | null> {
+  return withToken(async tok => {
+    try { const r = await fetch(apiUrl('/api/inventory'), { headers: { authorization: 'Bearer ' + tok }, cache: 'no-store' }); if (!r.ok) return null;
+      const inv = await r.json() as Inventory; if (!inv || !inv.items) return null; applyInventory(inv); return inv; } catch { return null; }
+  });
+}
+/* light a stick: the server consumes it and tells the shard; returns the window end */
+export function useDynamite(): Promise<{ until: number } | null> {
+  return withToken(async tok => { const r = await post('/api/items/use', { token: tok, item: 'dynamite' }); if (!r.ok || !r.data) return null; applyInventory(r.data as unknown as Inventory); return { until: Number(r.data.until) || 0 }; });
+}
+/* boost the whole country for an hour; the server stacks the window and publishes nick + until in the world snapshot */
+export function boostCountry(nick: string): Promise<{ until: number; cc: string } | null> {
+  return withToken(async tok => { const r = await post('/api/items/boost', { token: tok, nick }); if (!r.ok || !r.data) return null; applyInventory(r.data as unknown as Inventory); S.nick = nick; return { until: Number(r.data.until) || 0, cc: String(r.data.cc || S.country) }; });
+}
+export const countryBoost = (cc: string | null): [number, string] | null => (cc && live && live.boosts && live.boosts[cc]) || null;
 /* NOWPayments invoice for a 30/90/365-day pass; the worker talks to their API, we only get the hosted invoice URL */
 export function createCryptoInvoice(days: number): Promise<{ url: string } | null> {
   return withToken(async tok => { const r = await post('/api/pay/nowpayments/invoice', { token: tok, days }); return r.ok && typeof r.data?.url === 'string' ? { url: r.data.url as string } : null; });
 }
 
 /* Telegram Stars (SPEC §4.4): invoice link for Telegram.WebApp.openInvoice; cancel = stop renewal, access stays to the end of the period */
-export function createStarsInvoice(): Promise<{ url: string } | null> {
-  return withToken(async tok => { const r = await post('/api/pay/stars/invoice', { token: tok }); return r.ok && typeof r.data?.url === 'string' ? { url: r.data.url as string } : null; });
+export function createStarsInvoice(item?: string): Promise<{ url: string } | null> {
+  return withToken(async tok => { const r = await post('/api/pay/stars/invoice', item ? { token: tok, item } : { token: tok }); return r.ok && typeof r.data?.url === 'string' ? { url: r.data.url as string } : null; });
 }
 export function cancelStars(resume = false): Promise<Access | null> {
   return withToken(async tok => { const r = await post('/api/pay/stars/cancel', { token: tok, resume }); if (!r.ok || typeof r.data?.crew !== 'boolean') return null; const a = r.data as unknown as Access; S.crew = a.crew; return a; });
@@ -155,8 +178,9 @@ function applySnapshot(c: Compact) {
   const now = Date.now(); const prev = live;
   const rows: WorldRow[] = c.rows.map(([cc, m, today]) => ({ cc, m, today })).filter(r => ANTI[r.cc]);
   const season = c.season || null;
-  live = { rows, total: c.total, demo: false, t: c.t, season }; liveAt = now;
+  live = { rows, total: c.total, demo: false, t: c.t, season, boosts: c.boosts || {} }; liveAt = now;
   S.boost = !!season && season.boostUntil > now;
+  const mine = c.boosts && S.country ? c.boosts[S.country] : null; S.cboostUntil = mine && mine[0] > now ? mine[0] : 0; S.cboostBy = mine ? mine[1] : '';
   if (season && season.doneAt && S.seasonSeen !== season.n) { S.seasonSeen = season.n; for (const cb of onSeasonCbs) cb(season); }
   if (prev && !prev.demo) for (const o of overtakes(prev.rows, rows)) for (const cb of onOvertakeCbs) cb(o);
 }

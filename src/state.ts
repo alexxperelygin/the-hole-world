@@ -25,12 +25,16 @@ export interface GameState extends EconState {
   installed?: boolean;
   world: number;             // which world the digger is in (index into CFG.worlds, 0 = Earth)
   lap: number;               // completed laps of the world list
+  inv: { dynamite: number; boost: number };   // consumables owned (server copy; the server grants, the client only shows)
+  dynUntil: number;          // dynamite window end (server-issued)
+  nick: string;              // name shown in the country ticker when this player buys a boost
+  cboostUntil: number; cboostBy: string;      // paid boost on the player's country (from the world snapshot)
 }
 
 export function freshState(): GameState {
   return Object.assign({
     v: 1 as const, stars: 0, lifetime: 0, taps: 0, best: 0, runs: 0, finds: {}, country: null, lang: null, sound: true, crew: false,
-    lastSeen: Date.now(), daily: { date: null, streak: 0 }, newFinds: 0, onboard: 0, q: { date: null, list: [] }, fat: { date: null, active: 0, until: 0 }, firstDay: null, ref: null, refBy: null, seq: 0, friends: 0, boost: false, seasonSeen: 0, countryNext: 0, world: 0, lap: 0,
+    lastSeen: Date.now(), daily: { date: null, streak: 0 }, newFinds: 0, onboard: 0, q: { date: null, list: [] }, fat: { date: null, active: 0, until: 0 }, firstDay: null, ref: null, refBy: null, seq: 0, friends: 0, boost: false, seasonSeen: 0, countryNext: 0, world: 0, lap: 0, inv: { dynamite: 0, boost: 0 }, dynUntil: 0, nick: '', cboostUntil: 0, cboostBy: '',
   }, freshRun(CFG));
 }
 
@@ -52,6 +56,7 @@ export function loadSaved(): GameState | null { return fromSaved(store.get<Parti
 export function fromSaved(saved: Partial<GameState> | null): GameState | null {
   if (!saved || saved.v !== 1) return null;
   const s = Object.assign(freshState(), saved);
+  if (!s.inv || typeof s.inv !== 'object') s.inv = { dynamite: 0, boost: 0 };
   if (!Array.isArray(s.helpers) || s.helpers.length !== CFG.helpers.length) s.helpers = CFG.helpers.map((_, i) => (saved.helpers && saved.helpers[i]) || 0);
   return s;
 }
