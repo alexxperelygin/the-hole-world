@@ -1,0 +1,18 @@
+{
+  "extends": "../worker/tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true,
+    "typeRoots": [
+      "../worker/node_modules/@cloudflare",
+      "../worker/node_modules/@types"
+    ],
+    "types": [
+      "workers-types"
+    ]
+  },
+  "include": [
+    "./worker.ts",
+    "../worker/src/env.d.ts"
+  ]
+}

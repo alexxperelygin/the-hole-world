@@ -485,6 +485,9 @@ function frame(ts: number) {
 /* ---------------- boot ---------------- */
 async function boot(reset: boolean) {
   if (!reset) { const saved = loadSaved(); if (saved) setState(saved); }
+  // landing page thehole.world/<cc> (site/worker.ts) or ?c=<CC>: a new player digs for that country from the first tap
+  const landing = ((window as unknown as { __landingCC?: string }).__landingCC || new URLSearchParams(location.search).get('c') || '').toUpperCase();
+  if (S.taps === 0 && S.lifetime === 0 && ANTI[landing]) S.country = landing;
   if (!S.country || !ANTI[S.country]) S.country = detectCountry();
   if (!S.ref) S.ref = makeRefCode();
   if (!S.firstDay) S.firstDay = S.taps > 0 ? '1970-1-1' : Q.dayKey(); // existing saves are not first-day players

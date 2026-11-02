@@ -1,0 +1,24 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Hole World · панель</title>
+<meta name="robots" content="noindex,nofollow">
+<style>body{margin:0;background:#1b120d;color:#f7efe6;font:15px/1.4 Onest,system-ui,sans-serif;padding:20px}h1{font-size:20px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:18px}.card{background:#26190f;border:1px solid #3a2a1c;border-radius:12px;padding:12px}.card b{display:block;font-size:28px;color:#ffc21a}.card small{color:#b8a493}table{border-collapse:collapse;width:100%;margin-bottom:18px}td,th{text-align:left;padding:6px 8px;border-bottom:1px solid #3a2a1c}th{color:#b8a493;font-weight:600}input,button{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid #3a2a1c;background:#26190f;color:#f7efe6}button{background:#ffc21a;color:#1b120d;font-weight:700;cursor:pointer}#err{color:#ff8a7a}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}</style></head>
+<body><h1>🕳️ The Hole World · панель владельца</h1>
+<div class="row"><input id="key" type="password" placeholder="admin key" size="40"><button id="go">Показать</button><label><input type="checkbox" id="auto" checked> обновлять каждые 30 с</label><span id="upd"></span><span id="err"></span></div>
+<div class="grid" id="cards"></div>
+<div id="tables"></div>
+<p style="color:#b8a493;font-size:12px">Ключ хранится только в этом браузере (localStorage). Источник: GET api.thehole.world/api/admin/stats.</p>
+<script>
+const API='https://api.thehole.world/api/admin/stats'; const $=s=>document.querySelector(s);
+try{ $('#key').value=localStorage.getItem('hw.adminKey')||''; }catch{}
+const card=(l,v,s='')=>`<div class="card"><small>${l}</small><b>${v}</b><small>${s}</small></div>`;
+const table=(title,rows,cols)=>`<h3>${title}</h3><table><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
+const km=m=>m>=1e6?(m/1e6).toFixed(1)+' тыс. км':m>=1000?Math.round(m/1000)+' км':Math.round(m)+' м';
+async function load(){ const key=$('#key').value.trim(); if(!key) return; try{localStorage.setItem('hw.adminKey',key);}catch{}
+  $('#err').textContent='';
+  let d; try{ const r=await fetch(API,{headers:{'x-admin-key':key},cache:'no-store'}); if(!r.ok){ $('#err').textContent='Ошибка '+r.status+(r.status===403?' — неверный ключ':''); return; } d=await r.json(); }catch(e){ $('#err').textContent='Сеть: '+e; return; }
+  $('#cards').innerHTML=card('Игроков всего',d.users.total,'из них Telegram: '+d.users.telegram)+card('Новых за час',d.users.last1h)+card('Новых за 24 ч',d.users.last24h,'первых тапов: '+d.active.firstTaps24h)+card('Новых за 7 дней',d.users.last7d)+card('Активных за час',d.active.last1h)+card('Активных за 24 ч',d.active.last24h)+card('Gold сейчас',d.goldNow)+card('Страйков античита 24 ч',d.strikes24h)+(d.world?card('Мир выкопал',km(d.world.total),d.world.countries+' стран'):'');
+  const pays=d.payments.map(p=>[p.source,p.item||'gold',p.n,(p.cents/100).toFixed(2)]);
+  $('#tables').innerHTML=table('Новые игроки за 24 ч по странам',d.newByCountry24h.map(r=>[r.country,r.n]),['Страна','Игроков'])+(d.world?table('Топ стран мира',d.world.top.map((r,i)=>[i+1,r[0],km(r[1]),km(r[2])]),['#','Страна','Всего','Сегодня']):'')+table('Платежи (все время)',pays.length?pays:[['—','—',0,'0.00']],['Источник','Товар','Шт.','Сумма'])+table('События за 24 ч',d.events24h.map(r=>[r.name,r.n]),['Событие','Кол-во']);
+  $('#upd').textContent='обновлено '+new Date(d.t).toLocaleTimeString(); }
+$('#go').onclick=load; $('#key').addEventListener('keydown',e=>{ if(e.key==='Enter') load(); });
+setInterval(()=>{ if($('#auto').checked) load(); },30000); if($('#key').value) load();
+</script></body></html>
