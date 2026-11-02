@@ -1,7 +1,7 @@
 /* Core mechanics, modals and the frame loop. Economy maths lives in economy.ts; this file wires it to input, scene and UI. */
 import { CFG } from './config';
 import { ANTI } from './antipodes';
-import { S, setState, save, store, SAVE_KEY, freshState, loadSaved, makeRefCode } from './state';
+import { S, setState, save, store, SAVE_KEY, freshState, loadSaved, makeRefCode, W, worldNow } from './state';
 import * as E from './economy';
 import { t, tl, lang, loadLang, detectLang, LANGS, LANG_NAMES, fmtM, fmtN, nf, esc, countryName } from './i18n';
 import { Snd, buzz } from './audio';
@@ -11,7 +11,7 @@ import { toast, banner, updateHint } from './ui/toast';
 import { openModal, closeModal, modalOpen, onAction, sheetEl } from './ui/modal';
 import { renderPane, selectTab, tab, setRankMode, type RankMode } from './ui/panel';
 import { flyCoins, bumpTab, nope, pop } from './ui/motion';
-import { updateHud, layerName, nextMilestone, antipodeOf } from './ui/hud';
+import { updateHud, layerName, nextMilestone, goalOf } from './ui/hud';
 import { openShare, nativeShare, openSocial, copyShare, downloadCard } from './share';
 import { canInstall, promptInstall, onInstallChange } from './pwa';
 import * as Q from './quests';
@@ -31,11 +31,12 @@ const VERSION = __APP_VERSION__;
 let combo = 0, lastTap = 0, frenzyUntil = 0, tapStamps: number[] = [];
 let breaking = false;
 
-export function addMeters(m: number, offline = false) {
-  if (S.depth >= CFG.through || m <= 0) return;
+/* spend `effort` (tool/helper output) on the current layer; meters = effort / hardness. The country gets the effort (server units). */
+export function addMeters(effort: number, offline = false) {
+  if (S.depth >= W().through || effort <= 0) return;
   const before = S.depth;
-  const r = E.dig(S, m);
-  S.lifetime += r.m; net.addDelta(r.m); if (S.depth > S.best) S.best = S.depth;
+  const r = E.dig(S, effort);
+  S.lifetime += r.m; net.addDelta(r.effort); if (S.depth > S.best) S.best = S.depth;
   if (!offline) questProgress('meters', r.m);
   checkProgress(before);
 }
@@ -47,24 +48,24 @@ function tap(ev: PointerEvent | null) {
   combo = (tnow - lastTap < CFG.comboWindow) ? combo + 1 : 1; lastTap = tnow;
   const fr = tnow < frenzyUntil ? CFG.nugget.frenzyMult : 1;
   const m = E.tapPow(S) * E.comboMult(combo) * fr * E.tiredMult(S.fat, Date.now(), S.crew);
-  const la = E.layerAt(S.depth);
+  const la = E.layerAt(S.depth, W()); const shown = m / la.hard;
   addMeters(m); S.taps++; net.noteTap(tnow); questProgress('taps'); if (S.taps === 1) track('first_tap'); else if (S.taps === 100) track('tap_100'); if (combo >= CFG.comboMax) questProgress('combo');
   scene.swing(); scene.kick(2.5 + (fr > 1 ? 3 : 0));
   const r = scene.scene.getBoundingClientRect(); const dY = scene.digY();
   scene.burst(scene.cw / 2 + 20, dY, 7 + Math.min(8, combo / 4) | 0, la);
   const px = ev && ev.clientX != null ? ev.clientX - r.left : scene.cw / 2; const py = ev && ev.clientY != null ? ev.clientY - r.top : dY - 60;
-  scene.pushFloat({ x: E.clamp(px, 40, scene.cw - 40), y: E.clamp(py, 120, scene.ch - 20) - 18, s: '+' + fmtM(m), life: 0.8, c: fr > 1 ? '#ffc21a' : '#fff' });
+  scene.pushFloat({ x: E.clamp(px, 40, scene.cw - 40), y: E.clamp(py, 120, scene.ch - 20) - 18, s: '+' + fmtM(shown), life: 0.8, c: fr > 1 ? '#ffc21a' : '#fff' });
   Snd.dig(la.seg); buzz(6);
   if (S.onboard < 1 && S.taps >= 3) { S.onboard = 1; updateHint(); }
   rollFind(px, py);
 }
 
 function rollFind(px: number, py: number) {
-  if (S.depth >= CFG.through || Math.random() > CFG.findChance) return;
-  const la = E.layerAt(S.depth); const r = E.pickRarity(Math.random()); const key = la.layer.id + ':' + r;
+  if (S.depth >= W().through || Math.random() > CFG.findChance) return;
+  const la = E.layerAt(S.depth, W()); const r = E.pickRarity(Math.random()); const key = la.layer.id + ':' + r;
   const isNew = !S.finds[key]; S.finds[key] = (S.finds[key] || 0) + 1;
   const bonus = E.findBonus(S, r); S.coins += bonus;
-  const e = CFG.finds[la.layer.id][r]; const name = tl('finds.' + la.layer.id)[r] || '';
+  const e = W().finds[la.layer.id][r]; const name = tl('finds.' + la.layer.id)[r] || '';
   scene.pushFloat({ x: E.clamp(px, 40, scene.cw - 40), y: E.clamp(py, 140, scene.ch - 30) - 40, s: e, big: true, life: 1.2 });
   Snd.find(r); buzz(r >= 2 ? 30 : 12); if (r >= 2) scene.kick(7);
   if (isNew) { S.newFinds++; $('#findsDot').hidden = false; if (tab !== 'finds') bumpTab('finds'); checkCollection(la.layer.id); }
@@ -75,10 +76,10 @@ function rollFind(px: number, py: number) {
 }
 
 function checkProgress(before: number) {
-  const la = E.layerAt(S.depth);
+  const wc = W(); const la = E.layerAt(S.depth, wc);
   if (la.seg !== S.seg) { S.seg = la.seg; banner(layerName(la)); Snd.boom(); buzz(40); scene.kick(10); pop($('#depth'), 1.12); }
-  for (const ms of CFG.milestones) if (!S.ms[ms.k] && before < ms.d && S.depth >= ms.d) { S.ms[ms.k] = 1; milestone(ms); }
-  if (S.depth >= CFG.through) breakthrough();
+  for (const ms of wc.milestones) if (!S.ms[ms.k] && before < ms.d && S.depth >= ms.d) { S.ms[ms.k] = 1; milestone(ms); }
+  if (S.depth >= wc.through) breakthrough();
 }
 
 function buyTool(btn?: Element | null) {
@@ -86,7 +87,7 @@ function buyTool(btn?: Element | null) {
   if (S.coins < nx.cost) { nope(btn || null); return; }
   S.coins -= nx.cost; S.tool++; Snd.buy(); buzz(20); scene.kick(6); flyCoins(btn || null, 7, false); track('tool_buy', { tier: S.tool });
   toast(nx.e, t('tools.' + nx.id), '×' + nf(nx.pow / CFG.tools[S.tool - 1].pow, 1) + ' ' + t('per_tap'), '#ffc21a');
-  if (S.onboard < 2) { S.onboard = 2; updateHint(); const out = antipodeOf(S.country); setTimeout(() => toast(out.e, t('goal'), t('goal_toast', { dest: out.name }), '#7ad36b'), 1500); }
+  if (S.onboard < 2) { S.onboard = 2; updateHint(); const out = goalOf(); setTimeout(() => toast(out.e, t('goal'), t('goal_toast', { dest: out.name }), '#7ad36b'), 1500); }
   renderPane(true);
 }
 function buyHelper(i: number, btn?: Element | null) {
@@ -165,20 +166,23 @@ function showLegend(e: string, name: string, la: E.LayerInfo) {
     <div class="btns"><button class="btn primary" type="button" data-act="share" data-note="${esc(e + ' ' + name)}">${esc(t('share'))}</button><button class="btn" type="button" data-act="close" data-focus>${esc(t('close'))}</button></div>`);
 }
 function breakthrough() {
-  if (breaking) return; breaking = true; track('breakthrough', { stars: S.stars });
+  if (breaking) return; breaking = true; track('breakthrough', { stars: S.stars, world: worldNow().id, lap: S.lap || 0 });
   Snd.boom(); setTimeout(() => Snd.find(3), 300); scene.kick(18); buzz(60);
-  const out = antipodeOf(S.country);
-  openModal(`<div class="hazard-strip"></div><h2>${esc(t('breakthrough'))}</h2>
+  const out = goalOf(); const cur = worldNow(); const nx = E.nextWorld(S); const nw = E.worldOf(nx.world);
+  const harder = E.worldOf(nx.world).hardMult * E.lapHardMult(nx.lap) / (cur.hardMult * E.lapHardMult(S.lap || 0));
+  openModal(`<div class="hazard-strip"></div><h2>${esc(S.world ? t('dug_through_world', { w: t('worlds.' + cur.id) }) : t('breakthrough'))}</h2>
     <p>${esc(t('came_out', { from: '' }))} ${flag(S.country)} ${esc(countryName(S.country))}</p>
     <div class="emo">${em(out.e)}</div><div class="big" style="text-align:center">${esc(out.name)}${out.ocean ? ' ' + esc(t('splash')) : ''}</div>
-    <p>${esc(t('reward'))}</p>
-    <div class="btns"><button class="btn primary" type="button" data-act="again" data-focus>${esc(t('dig_again'))} ★${S.stars + 1}</button>
+    <p>${esc(t('reward', { x: CFG.prestigeBase }))}</p>
+    <div class="note ctx">${em(nw.e)} <b>${esc(t('next_world'))}: ${esc(t('worlds.' + nw.id))}</b>${nx.lap ? ' · ' + esc(t('lap', { n: nx.lap + 1 })) : ''}<br>${esc(t('world_harder', { x: nf(harder, harder < 10 ? 1 : 0), m: fmtN(E.prestigeMult(S.stars + 1)) }))}</div>
+    <div class="btns"><button class="btn primary" type="button" data-act="again" data-focus>${em(nw.e)} ${esc(t('dig_world', { w: t('worlds.' + nw.id) }))} ★${S.stars + 1}</button>
     <button class="btn" type="button" data-act="share" data-note="${esc(out.e + ' ' + out.name)}">${esc(t('share'))}</button>
     ${canInstall() ? `<button class="btn" type="button" data-act="install">${em('📥')} ${esc(t('install'))}</button>` : ''}</div>`, { lock: true });
 }
 function prestige() {
-  E.prestige(S); breaking = false; scene.resetCamera(); nextNugget = performance.now() + 30000;
-  save(); closeModal(true); renderPane(true); hud(); toast('⭐', '+50%', '×' + nf(E.mult(S), 1), '#ffc21a');
+  E.prestige(S); breaking = false; scene.resetCamera(); scene.worldChanged(); nextNugget = performance.now() + 30000;
+  track('prestige', { stars: S.stars, world: worldNow().id, lap: S.lap || 0 });
+  save(); closeModal(true); renderPane(true); hud(); banner(worldNow().e + ' ' + t('worlds.' + worldNow().id)); toast('⭐', '×' + CFG.prestigeBase, '×' + fmtN(E.mult(S)), '#ffc21a');
 }
 function openGold(source = 'button', ctx: Record<string, string> = {}) {
   track('paywall_view', { source });
@@ -272,12 +276,14 @@ function openSettings() {
     <p style="font-size:11px">${esc(t('version', { v: VERSION }))}</p>`);
 }
 function openJourney() {
-  const out = antipodeOf(S.country); const nm = nextMilestone();
-  const rows = CFG.milestones.map(m => { const done = S.depth >= m.d; const isNext = nm && nm.k === m.k;
+  const out = goalOf(); const nm = nextMilestone(); const wc = W();
+  const rows = wc.milestones.map(m => { const done = S.depth >= m.d; const isNext = nm && nm.k === m.k;
     return `<div class="ms-row ${done ? '' : 'todo'} ${isNext ? 'next' : ''}"><span class="mk">${done ? '✓' : '·'}</span><span>${esc(t('ms_names.' + m.k))}</span><span class="dd">${done ? esc(fmtM(m.d)) : esc(fmtM(m.d - S.depth))}</span></div>`; }).join('');
-  const exitRow = `<div class="ms-row ${S.depth >= CFG.through ? '' : 'todo'} ${!nm ? 'next' : ''}"><span class="mk">${S.depth >= CFG.through ? '✓' : '·'}</span><span>${em(out.e)} ${esc(out.name)}</span><span class="dd">${esc(fmtM(Math.max(0, CFG.through - S.depth)))}</span></div>`;
+  const exitRow = `<div class="ms-row ${S.depth >= wc.through ? '' : 'todo'} ${!nm ? 'next' : ''}"><span class="mk">${S.depth >= wc.through ? '✓' : '·'}</span><span>${em(out.e)} ${esc(out.name)}</span><span class="dd">${esc(fmtM(Math.max(0, wc.through - S.depth)))}</span></div>`;
+  const cur = worldNow();
   openModal(`<h2>${esc(t('journey_title'))}</h2>
-    <div class="route"><div>${flag(S.country)}<b>${esc(countryName(S.country))}</b><small>${esc(t('journey_from'))}</small></div><div class="arrow">${esc(fmtM(CFG.through))} ↓</div><div>${em(out.e)}<b>${esc(out.name)}</b><small>${esc(t('exit'))}</small></div></div>
+    ${S.world || S.lap ? `<div class="set-row"><span>${em(cur.e)} ${esc(t('worlds.' + cur.id))}${S.lap ? ' · ' + esc(t('lap', { n: S.lap + 1 })) : ''}</span><span class="hint-text">★${S.stars} · ×${esc(fmtN(E.mult(S)))}</span></div>` : ''}
+    <div class="route"><div>${flag(S.country)}<b>${esc(countryName(S.country))}</b><small>${esc(t('journey_from'))}</small></div><div class="arrow">${esc(fmtM(wc.through))} ↓</div><div>${em(out.e)}<b>${esc(out.name)}</b><small>${esc(t('exit'))}</small></div></div>
     <p>${esc(t('journey_why'))}</p>
     <div class="ms-list">${rows}${exitRow}</div>
     <button class="btn" type="button" data-act="close" data-focus>${esc(t('close'))}</button>`);
@@ -339,11 +345,11 @@ async function applyLang(l: string) {
 
 /* ---------------- save / offline / daily ---------------- */
 function applyOffline(sec: number) {
-  const m = E.offlineMeters(S, sec); if (m <= 0) return;
-  const c0 = S.coins; addMeters(m, true); scene.snap(S.depth);
+  const eff = E.offlineEffort(S, sec); if (eff <= 0) return;
+  const c0 = S.coins, d0 = S.depth; addMeters(eff, true); scene.snap(S.depth); const m = S.depth - d0;
   const cap = S.crew ? CFG.offlineCapCrew : CFG.offlineCapFree;
   if (!S.crew && sec > cap * 1.5) { // the moment Gold is worth it: helpers stood idle for hours
-    const missed = Math.min(sec, CFG.offlineCapCrew) - cap; const extra = E.idleRate(S) * missed;
+    const missed = Math.min(sec, CFG.offlineCapCrew) - cap; const extra = E.metersPerSec(S) * missed;
     track('paywall_view', { source: 'offline_cap' });
     setTimeout(() => openModal(`<div class="emo">${em('😴')}</div><div class="big" style="text-align:center">+${esc(fmtM(m))}</div>
       <p style="text-align:center">${esc(t('offline_capped', { h: Math.round(cap / 3600), a: fmtDur(sec) }))}</p>
@@ -419,14 +425,14 @@ async function boot(reset: boolean) {
   if (!S.firstDay) S.firstDay = S.taps > 0 ? '1970-1-1' : Q.dayKey(); // existing saves are not first-day players
   const ref = incomingRef(); let welcome = false;
   if (ref && !S.refBy && ref !== S.ref && S.taps === 0) { S.refBy = ref; welcome = true; }
-  scene.snap(S.depth); S.seg = E.layerAt(S.depth).seg; breaking = false;
+  scene.snap(S.depth); scene.worldChanged(); S.seg = E.layerAt(S.depth, W()).seg; breaking = false;
   await applyLang(S.lang || detectLang(tgLang() ? [tgLang() as string, ...(navigator.languages || [])] : undefined));
   applyEmoji();
   if (!reset) { const away = (Date.now() - (S.lastSeen || Date.now())) / 1000; applyOffline(away); daily(); }
   Q.ensureToday();
   if (welcome) setTimeout(() => toast('🤝', t('ref_welcome'), '', '#7ad36b'), 600);
   updateHint(); save();
-  if (S.depth >= CFG.through) breakthrough();
+  if (S.depth >= W().through) breakthrough();
   net.connect(); // live world: never blocks the first tap; the demo ranking shows until the session answers
   if (!reset && consumePaidReturn()) afterPayment();
 }
@@ -446,7 +452,7 @@ net.onSession(info => {
   const localFresh = S.taps === 0 && S.lifetime === 0 && S.runs === 0;
   if (!localFresh && info.save.updated_at <= S.lastSeen) return;
   const keep = { country: S.country, lang: S.lang, ref: S.ref, friends: S.friends, countryNext: S.countryNext, lastSeen: Date.now() };
-  setState(Object.assign(cloud, keep)); scene.snap(S.depth); S.seg = E.layerAt(S.depth).seg; Q.ensureToday(); renderPane(true); hud(); save();
+  setState(Object.assign(cloud, keep)); scene.snap(S.depth); scene.worldChanged(); S.seg = E.layerAt(S.depth, W()).seg; Q.ensureToday(); renderPane(true); hud(); save();
   toast('☁️', t('cloud_restored'), fmtM(S.depth), '#7ad36b');
 });
 net.onOvertake(o => {
@@ -464,6 +470,7 @@ export async function start() {
   await boot(false);
   requestAnimationFrame(t0 => { lastFrame = t0; frame(t0); });
   // debug/test hook (personal economy is client-side by design; the country ranking is validated server-side in Phase 2)
-  (window as unknown as { __game: unknown }).__game = { get S() { return S; }, CFG, addMeters, layerAt: E.layerAt, E, Q, net,
+  (window as unknown as { __game: unknown }).__game = { get S() { return S; }, CFG, addMeters, layerAt: E.layerAt, E, Q, net, W,
+    jumpTo: (d: number) => { const before = S.depth; S.depth = Math.min(d, W().through); if (S.depth > S.best) S.best = S.depth; checkProgress(before); save(); }, // tests: move the digger to a depth (meters) regardless of hardness
     debugFatigue: () => { S.firstDay = '1970-1-1'; S.fat.active = CFG.fatigue.activeSecPerDay - 0.01; lastTap = performance.now(); } };
 }

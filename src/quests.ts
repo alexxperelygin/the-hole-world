@@ -1,7 +1,7 @@
 /* Daily quests: generated from the date, progressed by game events, claimed for coins. No DOM here. */
 import { CFG } from './config.ts';
 import { S, type Quest } from './state';
-import { tapPow, idleRate, niceNumber, questReward } from './economy';
+import { metersPerTap, metersPerSec, niceNumber, questReward } from './economy';
 
 export const dayKey = (d = new Date()) => d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
 export function secsToMidnight(now = new Date()) { const m = new Date(now); m.setHours(24, 0, 0, 0); return Math.max(0, Math.round((m.getTime() - now.getTime()) / 1000)); }
@@ -12,7 +12,7 @@ export function generate(date: string, s = S): Quest[] {
   const order = kinds.map((k, i) => ({ k, r: ((seed * 9301 + i * 49297) % 233280) / 233280 })).sort((a, b) => a.r - b.r).slice(0, CFG.quests.perDay).map(x => x.k);
   return order.map(k => {
     let target: number;
-    if (k.id === 'meters') { const perSec = tapPow(s) * CFG.incomeTapsPerSec + idleRate(s); target = niceNumber(Math.max(50, perSec * 60 * (k.minutes || 10))); }
+    if (k.id === 'meters') { const perSec = metersPerTap(s) * CFG.incomeTapsPerSec + metersPerSec(s); target = niceNumber(Math.max(50, perSec * 60 * (k.minutes || 10))); }
     else target = niceNumber((k.base || 1) + (k.perStar || 0) * s.stars);
     return { id: k.id, target, prog: 0, claimed: false };
   });

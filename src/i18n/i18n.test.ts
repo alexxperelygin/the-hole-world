@@ -36,6 +36,9 @@ describe('i18n dictionaries', () => {
     for (const h of CFG.helpers) expect(enFlat['helpers.' + h.id]).toBeTypeOf('string');
     for (const r of CFG.rarity) expect(enFlat['rarity.' + r.id]).toBeTypeOf('string');
     for (const m of CFG.milestones) expect(enFlat[m.k]).toBeTypeOf('string');
+    for (const w of CFG.worlds) { expect(enFlat['worlds.' + w.id]).toBeTypeOf('string');
+      for (const l of w.layers) { expect(enFlat['layers.' + l.id], l.id).toBeTypeOf('string'); for (let r = 0; r < 4; r++) expect(enFlat[`finds.${l.id}[${r}]`], l.id).toBeTypeOf('string'); }
+      for (const m of w.milestones) { expect(enFlat[m.k], m.k).toBeTypeOf('string'); expect(enFlat['ms_names.' + m.k], m.k).toBeTypeOf('string'); } }
     for (const o of ['PAC', 'ATL', 'IND', 'SOU', 'ARC']) expect(enFlat['oceans.' + o]).toBeTypeOf('string');
   });
 });

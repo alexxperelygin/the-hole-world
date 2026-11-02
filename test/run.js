@@ -56,7 +56,7 @@ try {
     if (st2.tool !== 1) errs.push(name + ': shovel not bought ' + JSON.stringify(st2));
     await p.screenshot({ path: `test/${name}-2-helpers.png` });
     await p.evaluate(() => { const S = __game.S; S.tool = 6; S.helpers = [10, 10, 10, 8, 5, 3, 0, 0]; S.coins = 5e6; });
-    await p.evaluate(() => __game.addMeters(13000)); await p.waitForTimeout(400);
+    await p.evaluate(() => __game.jumpTo(13000)); await p.waitForTimeout(400);
     await p.screenshot({ path: `test/${name}-3-kola-modal.png` });
     await p.click('[data-act="close"]').catch(() => {});
     await p.click('.tab[data-tab="finds"]'); await p.evaluate(() => { const S = __game.S; S.finds = { 'soil:0': 3, 'soil:1': 1, 'clay:0': 2, 'sed:2': 1, 'granite:1': 1 }; });
@@ -86,9 +86,9 @@ try {
     await p.click('#tired', { force: true }).catch(() => {}); await p.evaluate(() => document.querySelector('#btnGold').click()); await p.waitForTimeout(200);
     const perks = await p.$$eval('.perks2 li', els => els.length); if (perks !== 6) errs.push(name + ': paywall perks ' + perks);
     await p.click('[data-act="close"]');
-    await p.evaluate(() => { __game.S.ms = { m_mantle: 1, m_diamond: 1, m_ocore: 1, m_icore: 1, m_center: 1, m_kola: 1 }; __game.addMeters(5300000 - __game.S.depth); }); await p.waitForTimeout(900);
+    await p.evaluate(() => { __game.S.ms = { m_mantle: 1, m_diamond: 1, m_ocore: 1, m_icore: 1, m_center: 1, m_kola: 1 }; __game.jumpTo(5300000); }); await p.waitForTimeout(900);
     await p.screenshot({ path: `test/${name}-6-icore.png` });
-    await p.evaluate(() => __game.addMeters(12742000)); await p.waitForTimeout(600);
+    await p.evaluate(() => __game.jumpTo(12742000)); await p.waitForTimeout(600);
     await p.screenshot({ path: `test/${name}-7-breakthrough.png` });
     await p.click('[data-act="share"]').catch(e => errs.push('share: ' + e.message)); await p.waitForTimeout(800);
     const shareTxt = await p.$eval('#shareTxt', el => el.textContent).catch(() => '');
@@ -131,7 +131,7 @@ try {
     const sc = await p.$('#scene'); const bb = await sc.boundingBox();
     for (let i = 0; i < 5; i++) { await p.mouse.click(bb.x + bb.width / 2, bb.y + bb.height * 0.6); await p.waitForTimeout(40); }
     const hapt = await p.evaluate(() => window.__tg.haptics); if (hapt < 5) errs.push('tma haptics ' + hapt);
-    await p.evaluate(() => __game.addMeters(13000)); await p.waitForTimeout(300); await p.click('[data-act="share"]'); await p.waitForTimeout(600);
+    await p.evaluate(() => __game.jumpTo(13000)); await p.waitForTimeout(300); await p.click('[data-act="share"]'); await p.waitForTimeout(600);
     const first = await p.$eval('.soc', el => el.dataset.act); if (first !== 'share-tg') errs.push('tma: Telegram button not first: ' + first);
     const native = await p.$('[data-act="share-native"]'); if (native) errs.push('tma: native share button should be hidden');
     await p.click('[data-act="share-tg"]'); await p.waitForTimeout(200);

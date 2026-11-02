@@ -1,6 +1,6 @@
 /* Share card (1080×1350 PNG), Web Share API with the file, social fallbacks, referral link. */
 import { CFG } from './config';
-import { S } from './state';
+import { S, W } from './state';
 import { t, lang, fmtM, countryName, esc } from './i18n';
 import { clamp } from './economy';
 import { drawEmoji, flagOf, em } from './ui/emoji';
@@ -8,7 +8,6 @@ import { openModal } from './ui/modal';
 import { track } from './analytics';
 import { isTelegram, openUrl, tg } from './platform/telegram';
 
-const L = CFG.layers;
 
 export function shareUrl(): string {
   if (isTelegram() && CFG.tgApp) return CFG.tgApp + (S.ref ? '?startapp=r_' + encodeURIComponent(S.ref) : '');
@@ -19,12 +18,13 @@ export const shareFull = () => shareText() + ' ' + shareUrl();
 
 export function drawCard(note: string): HTMLCanvasElement {
   const c = document.createElement('canvas'); c.width = 1080; c.height = 1350; const g = c.getContext('2d')!;
+  const L = W().layers, NLs = L.length; const li = (i: number) => L[Math.min(NLs - 1, Math.round(i * (NLs - 1) / 8))];
   g.fillStyle = '#8fd0f5'; g.fillRect(0, 0, 1080, 480);
   const bands: Array<[number, number]> = [[480, 0], [530, 1], [600, 2], [680, 3], [760, 4], [850, 5], [960, 6], [1070, 7], [1160, 8]];
-  bands.forEach(([y, i], k) => { const ny = k + 1 < bands.length ? bands[k + 1][0] : 1350; g.fillStyle = L[i].c[0]; g.fillRect(0, y, 1080, ny - y);
-    g.fillStyle = L[i].c[2]; for (let n = 0; n < 40; n++) g.fillRect((n * 197 + i * 53) % 1080, y + (n * 37) % Math.max(8, ny - y - 8), 14, 8); });
+  bands.forEach(([y, i], k) => { const ny = k + 1 < bands.length ? bands[k + 1][0] : 1350; g.fillStyle = li(i).c[0]; g.fillRect(0, y, 1080, ny - y);
+    g.fillStyle = li(i).c[2]; for (let n = 0; n < 40; n++) g.fillRect((n * 197 + i * 53) % 1080, y + (n * 37) % Math.max(8, ny - y - 8), 14, 8); });
   g.fillStyle = '#4fae3d'; g.fillRect(0, 470, 1080, 18);
-  const frac = clamp(Math.log10(1 + S.best) / Math.log10(1 + CFG.through), 0.06, 1);
+  const frac = clamp(Math.log10(1 + Math.min(S.depth, W().through)) / Math.log10(1 + W().through), 0.06, 1);
   const sh = 488 + frac * 720; g.fillStyle = 'rgba(15,9,6,.9)'; g.fillRect(480, 488, 120, sh - 488);
   drawEmoji(g, '👷', 540, sh + 6, 104);
   g.fillStyle = '#1b120d'; g.fillRect(60, 60, 960, 370);

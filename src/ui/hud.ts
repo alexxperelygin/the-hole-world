@@ -1,50 +1,54 @@
 /* Top bar + depth readout + ticker. Called ~15×/s from the loop. */
 import { CFG } from '../config';
-import { S } from '../state';
+import { S, W, worldNow } from '../state';
 import { t, fmtM, fmtN, fmtBig, nf, esc, countryName } from '../i18n';
-import { layerAt, nextBound, prevBound, clamp, comboMult, type LayerInfo } from '../economy';
+import { layerAt, nextBound, prevBound, boundsOf, clamp, comboMult, type LayerInfo } from '../economy';
 import { worldSnapshot, onOvertake, isOnline } from '../net';
 import { em, flag } from './emoji';
 import { ANTI } from '../antipodes';
 import { flagOf } from './emoji';
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector(s) as T;
-const L = CFG.layers;
 export function antipodeOf(cc: string | null) {
   const a = cc ? ANTI[cc] : null; const res = a ? a[2] : '~PAC';
   if (res[0] === '~') { const o = res.slice(1); return { ocean: true, e: '🌊', name: t('oceans.' + o) }; }
   return { ocean: false, e: flagOf(res), name: countryName(res) };
 }
+/* where this run ends: the country's antipode on Earth, the far side of the world elsewhere */
+export function goalOf() { if (!S.world) return antipodeOf(S.country); const w = worldNow(); return { ocean: false, e: w.e, name: t('far_side_of', { w: t('worlds.' + w.id) }) }; }
+export const worldLabel = () => { const w = worldNow(); return t('worlds.' + w.id) + (S.lap ? ' · ' + t('lap', { n: S.lap + 1 }) : ''); };
 export function layerName(la: LayerInfo) { return t('layers.' + la.layer.id) + (la.far ? ' · ' + t('far') : ''); }
 
 export interface HudInput { combo: number; lastTap: number; frenzy: boolean }
-const NSEG = 2 * L.length;
 let jInit = '';
 /* journey bar: 18 equal segments (down, then mirrored up), marker = segment + progress inside it */
 function updateJourney(seg: number, frac: number) {
-  const key = (S.country || '') + '|' + document.documentElement.lang;
+  const L = W().layers, NSEG = 2 * L.length;
+  const key = (S.country || '') + '|' + document.documentElement.lang + '|' + (S.world || 0) + '|' + (S.lap || 0);
   if (jInit !== key) { jInit = key;
     const cols = L.map(l => l.c[0]); const all = cols.concat(cols.slice().reverse());
     $('#jBar').style.background = `linear-gradient(${all.map((c, i) => `${c} ${(i / NSEG * 100).toFixed(2)}% ${((i + 1) / NSEG * 100).toFixed(2)}%`).join(',')})`;
-    $('#jFrom').innerHTML = flag(S.country); const out = antipodeOf(S.country); $('#jTo').innerHTML = em(out.e);
+    $('#jFrom').innerHTML = flag(S.country); const out = goalOf(); $('#jTo').innerHTML = em(out.e);
     $('#journey').setAttribute('aria-label', t('journey_title')); }
   $('#jPos').style.top = (clamp((seg + frac) / NSEG, 0, 1) * 100).toFixed(2) + '%';
 }
-export function nextMilestone() { for (const m of CFG.milestones) if (S.depth < m.d) return m; return null; }
+export function nextMilestone() { for (const m of W().milestones) if (S.depth < m.d) return m; return null; }
 export function updateHud(inp: HudInput) {
   $('#coins').textContent = fmtN(S.coins);
   $('#depth').textContent = fmtM(S.depth);
-  const la = layerAt(S.depth); $('#layerName').textContent = layerName(la);
-  const nb = nextBound(S.depth), pb = prevBound(S.depth);
+  const wc = W(), L = wc.layers, B = boundsOf(wc);
+  const la = layerAt(S.depth, wc); $('#layerName').textContent = layerName(la);
+  const nb = nextBound(S.depth, B), pb = prevBound(S.depth, B);
   $('#nextInfo').textContent = nb.out ? '' : t('next') + ': ' + (nb.center ? t('center_short') : t('layers.' + L[nb.i].id)) + ' · ' + fmtM(nb.d - S.depth);
   const frac = clamp((S.depth - pb) / Math.max(1e-9, nb.d - pb), 0, 1);
   $('#layerBar').style.width = (frac * 100) + '%';
   updateJourney(la.seg, frac);
-  const nm = nextMilestone(); const out = antipodeOf(S.country);
-  $('#nextMs').innerHTML = nm ? `${em('📍')} ${esc(t('next_ms', { n: t('ms_names.' + nm.k), d: fmtM(nm.d - S.depth) }))}` : `${em(out.e)} ${esc(t('next_ms', { n: out.name, d: fmtM(CFG.through - S.depth) }))}`;
-  const far = S.depth > CFG.earthR;
-  const pct = far ? (S.depth - CFG.earthR) / CFG.earthR * 100 : S.depth / CFG.earthR * 100;
-  $('#coreInfo').textContent = (pct < 0.01 ? '<0.01' : pct < 10 ? nf(pct, 2) : nf(pct, 1)) + '% ' + t(far ? 'to_out' : 'to_core') + (S.stars ? '  ·  ★' + S.stars : '') + (S.boost ? '  ·  ×' + CFG.world.boostMult + ' 🌍' : '');
+  const nm = nextMilestone(); const out = goalOf();
+  $('#nextMs').innerHTML = nm ? `${em('📍')} ${esc(t('next_ms', { n: t('ms_names.' + nm.k), d: fmtM(nm.d - S.depth) }))}` : `${em(out.e)} ${esc(t('next_ms', { n: out.name, d: fmtM(wc.through - S.depth) }))}`;
+  const far = S.depth > wc.earthR;
+  const pct = far ? (S.depth - wc.earthR) / wc.earthR * 100 : S.depth / wc.earthR * 100;
+  const toCore = S.world ? t('to_center_of', { w: t('worlds.' + worldNow().id) }) : t('to_core');
+  $('#coreInfo').textContent = (pct < 0.01 ? '<0.01' : pct < 10 ? nf(pct, 2) : nf(pct, 1)) + '% ' + (far ? t('to_out') : toCore) + (S.stars ? '  ·  ★' + S.stars : '') + (S.world || S.lap ? '  ·  ' + worldNow().e : '') + (S.boost ? '  ·  ×' + CFG.world.boostMult + ' 🌍' : '');
   const c = $('#combo');
   if (inp.frenzy) { c.hidden = false; c.textContent = t('frenzy', { x: CFG.nugget.frenzyMult }); }
   else if (inp.combo >= 5 && performance.now() - inp.lastTap < 700) { c.hidden = false; c.textContent = '×' + nf(comboMult(inp.combo), 1); }

@@ -65,7 +65,7 @@
   "breakthrough": "¡Atravesaste todo el planeta!",
   "came_out": "Empezaste en: {from}",
   "splash": "¡SPLASH!",
-  "reward": "Recompensa: +50% a todo, para siempre. Tu colección se queda.",
+  "reward": "Recompensa: ×{x} a todo, para siempre. Tu colección se queda.",
   "dig_again": "Cavar otra vez",
   "share": "Compartir",
   "copy": "Copiar texto",
@@ -98,7 +98,36 @@
     "umantle": "Manto superior",
     "lmantle": "Manto inferior",
     "ocore": "Núcleo externo",
-    "icore": "Núcleo interno"
+    "icore": "Núcleo interno",
+    "regolith": "Regolito",
+    "megareg": "Megarregolito",
+    "anorth": "Corteza de anortosita",
+    "mmantle": "Manto lunar",
+    "mcore": "Núcleo lunar",
+    "rdust": "Polvo rojo",
+    "permafr": "Permafrost",
+    "mbasalt": "Basalto marciano",
+    "rmantle": "Manto marciano",
+    "rcore": "Núcleo marciano",
+    "vlava": "Llanuras de lava",
+    "vbasalt": "Basalto venusino",
+    "vlitho": "Litosfera",
+    "vmantle": "Manto venusino",
+    "vcore": "Núcleo venusino",
+    "nclouds": "Nubes de metano",
+    "nhydro": "Mar de hidrógeno",
+    "nice": "Manto de hielo",
+    "ndiamond": "Lluvia de diamantes",
+    "ncore": "Núcleo rocoso",
+    "jclouds": "Cima de las nubes",
+    "jstorm": "Gran Mancha Roja",
+    "jhydro": "Hidrógeno líquido",
+    "jmetal": "Hidrógeno metálico",
+    "jcore": "Núcleo joviano",
+    "photo": "Fotosfera",
+    "convect": "Zona convectiva",
+    "radiat": "Zona radiativa",
+    "fusion": "Núcleo de fusión"
   },
   "tools": {
     "spoon": "Cuchara",
@@ -182,6 +211,180 @@
       "Cristal del núcleo",
       "Sol diminuto",
       "Corazón de la Tierra"
+    ],
+    "regolith": [
+      "Roca lunar",
+      "Huella",
+      "Bandera clavada",
+      "Queso verde"
+    ],
+    "megareg": [
+      "Tornillo perdido",
+      "Satélite muerto",
+      "Bota lunar",
+      "Módulo estrellado"
+    ],
+    "anorth": [
+      "Piedra blanca",
+      "Cristal lunar",
+      "Telescopio enterrado",
+      "Ojo azul"
+    ],
+    "mmantle": [
+      "Vidrio oscuro",
+      "Magma caliente",
+      "Saturno diminuto",
+      "Alien lunar"
+    ],
+    "mcore": [
+      "Imán de hierro",
+      "Diamante lunar",
+      "Luna llena",
+      "Luna nueva"
+    ],
+    "rdust": [
+      "Remolino de polvo",
+      "Lata de frijoles",
+      "Rover viejo",
+      "Sonda perdida"
+    ],
+    "permafr": [
+      "Bloque de hielo",
+      "Microbio marciano",
+      "ADN alienígena",
+      "Pez fósil"
+    ],
+    "mbasalt": [
+      "Basalto negro",
+      "Magnetita",
+      "Piedra del Olimpo",
+      "Cara de Marte"
+    ],
+    "rmantle": [
+      "Volcán muerto",
+      "Cristal rojo",
+      "Pluma del manto",
+      "Dragón de arena"
+    ],
+    "rcore": [
+      "Engranaje oxidado",
+      "Diamante de Marte",
+      "Piedra con anillos",
+      "Hombrecito verde"
+    ],
+    "vlava": [
+      "Lava fresca",
+      "Burbuja de ácido",
+      "Sonda derretida",
+      "Corona de Venus"
+    ],
+    "vbasalt": [
+      "Basalto caliente",
+      "Frasco de azufre",
+      "Esfera nublada",
+      "Anillo fundido"
+    ],
+    "vlitho": [
+      "Magnetita",
+      "Cristal de presión",
+      "Llave ancestral",
+      "Escorpión de lava"
+    ],
+    "vmantle": [
+      "Fuego del manto",
+      "Matraz de alquimista",
+      "Serpiente de magma",
+      "Dragón de Venus"
+    ],
+    "vcore": [
+      "Rayo del núcleo",
+      "Diamante del núcleo",
+      "Sol pequeño",
+      "Reina de Venus"
+    ],
+    "nclouds": [
+      "Jirón de cirro",
+      "Ojo de tormenta",
+      "Cometa perdida",
+      "Ballena del cielo"
+    ],
+    "nhydro": [
+      "Burbuja de hidrógeno",
+      "Esquirla de hielo",
+      "Frasco abisal",
+      "Sirena"
+    ],
+    "nice": [
+      "Copo de nieve",
+      "Cristal azul",
+      "Hielo ancestral",
+      "Kraken de hielo"
+    ],
+    "ndiamond": [
+      "Gota de diamante",
+      "Diamante azul",
+      "Corona de diamantes",
+      "Tridente de Neptuno"
+    ],
+    "ncore": [
+      "Roca del núcleo",
+      "Imán del núcleo",
+      "Galaxia de bolsillo",
+      "Pulpo abisal"
+    ],
+    "jclouds": [
+      "Nube de amoníaco",
+      "Globo meteorológico",
+      "Paracaídas perdido",
+      "Águila de tormenta"
+    ],
+    "jstorm": [
+      "Espiral de tormenta",
+      "Rayo joviano",
+      "Gota roja",
+      "Ojo de la Mancha"
+    ],
+    "jhydro": [
+      "Perla de hidrógeno",
+      "Frasco de presión",
+      "Ola interior",
+      "Ballena de hidrógeno"
+    ],
+    "jmetal": [
+      "Imán metálico",
+      "Engranaje gigante",
+      "Tornillo de oro",
+      "Robot del núcleo"
+    ],
+    "jcore": [
+      "Corazón rocoso",
+      "Diamante joviano",
+      "Estrella fallida",
+      "Corona de Júpiter"
+    ],
+    "photo": [
+      "Llamarada solar",
+      "Mancha solar",
+      "Gafas derretidas",
+      "Pluma de fénix"
+    ],
+    "convect": [
+      "Burbuja de plasma",
+      "Termómetro roto",
+      "Rayo solar",
+      "Ave de fuego"
+    ],
+    "radiat": [
+      "Fotón perdido",
+      "Luz ancestral",
+      "Destello brillante",
+      "Genio de luz"
+    ],
+    "fusion": [
+      "Átomo de helio",
+      "Diamante estelar",
+      "Estrella recién nacida",
+      "Trofeo del Sol"
     ]
   },
   "oceans": {
@@ -237,7 +440,36 @@
     "m_diamond": "Diamantes",
     "m_ocore": "Núcleo externo",
     "m_icore": "Núcleo interno",
-    "m_center": "Centro de la Tierra"
+    "m_center": "Centro de la Tierra",
+    "m_moon_reg": "Megarregolito",
+    "m_moon_crust": "Corteza lunar",
+    "m_moon_mantle": "Manto lunar",
+    "m_moon_core": "Núcleo lunar",
+    "m_moon_center": "Centro de la Luna",
+    "m_mars_ice": "Permafrost",
+    "m_mars_basalt": "Basalto",
+    "m_mars_olympus": "Monte Olimpo",
+    "m_mars_mantle": "Manto marciano",
+    "m_mars_center": "Centro de Marte",
+    "m_venus_plains": "Llanuras de lava",
+    "m_venus_crust": "Corteza venusina",
+    "m_venus_mantle": "Manto venusino",
+    "m_venus_core": "Núcleo venusino",
+    "m_venus_center": "Centro de Venus",
+    "m_nep_wind": "Vientos de tormenta",
+    "m_nep_ice": "Manto de hielo",
+    "m_nep_diamond": "Lluvia de diamantes",
+    "m_nep_core": "Núcleo rocoso",
+    "m_nep_center": "Centro de Neptuno",
+    "m_jup_storm": "Gran Mancha Roja",
+    "m_jup_ocean": "Océano de hidrógeno",
+    "m_jup_metal": "Hidrógeno metálico",
+    "m_jup_core": "Núcleo joviano",
+    "m_jup_center": "Centro de Júpiter",
+    "m_sun_photo": "Fotosfera",
+    "m_sun_convect": "Zona convectiva",
+    "m_sun_core": "Núcleo de fusión",
+    "m_sun_center": "Centro del Sol"
   },
   "quests": "Misiones diarias",
   "quest_taps": "Toca {n} veces",
@@ -285,5 +517,50 @@
   "country_next": "Próximo cambio: {d}",
   "cloud_restored": "Progreso restaurado desde la nube",
   "season_done_title": "¡La humanidad atravesó la Tierra!",
-  "season_done_body": "Gracias a los países líderes. Todos cavan ×2 durante {h} horas y luego empieza una nueva temporada."
+  "season_done_body": "Gracias a los países líderes. Todos cavan ×2 durante {h} horas y luego empieza una nueva temporada.",
+  "dug_through_world": "¡Atravesaste {w}!",
+  "next_world": "Siguiente mundo",
+  "dig_world": "Cava en {w}",
+  "world_harder": "Roca ×{x} más dura que aquí, tú ×{m} más fuerte que al principio.",
+  "lap": "Vuelta {n}",
+  "far_side_of": "{w}, el otro lado",
+  "to_center_of": "al centro: {w}",
+  "worlds": {
+    "earth": "la Tierra",
+    "moon": "la Luna",
+    "mars": "Marte",
+    "venus": "Venus",
+    "neptune": "Neptuno",
+    "jupiter": "Júpiter",
+    "sun": "el Sol"
+  },
+  "m_moon_reg": "15 m. Bajo el polvo: roca triturada por cuatro mil millones de años de impactos.",
+  "m_moon_crust": "2 km. La corteza pálida que hace brillar a la Luna.",
+  "m_moon_mantle": "50 km. Atravesaste la corteza lunar. Un sexto de la gravedad, la misma cavada.",
+  "m_moon_core": "1.400 km. Resulta que la Luna sí tiene un pequeño núcleo de hierro.",
+  "m_moon_center": "1.737 km. EL CENTRO DE LA LUNA. Ahora arriba, hacia la cara oculta, la que nadie ve desde la Tierra.",
+  "m_mars_ice": "20 m. Permafrost. En Marte hay más agua de lo que la gente cree.",
+  "m_mars_basalt": "500 m. Roca volcánica antigua. Marte tuvo lava alguna vez.",
+  "m_mars_olympus": "21,9 km. El monte Olimpo, el volcán más alto del sistema solar, cabría en tu hoyo.",
+  "m_mars_mantle": "50 km. La corteza de Marte es más gruesa que la de la Tierra. Ya la atravesaste.",
+  "m_mars_center": "3.390 km. EL CENTRO DE MARTE. Mitad del camino. ¡Cava hacia arriba!",
+  "m_venus_plains": "10 m. Superficie: 465 °C y 90 atmósferas. Tu pala se derrite un poquito.",
+  "m_venus_crust": "500 m. Basalto joven. Venus renovó su superficie con lava no hace mucho.",
+  "m_venus_mantle": "60 km. Atravesaste la corteza de la gemela malvada de la Tierra.",
+  "m_venus_core": "3.000 km. El núcleo de Venus. Probablemente líquido. Nadie lo sabe con certeza.",
+  "m_venus_center": "6.052 km. EL CENTRO DE VENUS. Mitad del camino.",
+  "m_nep_wind": "1 km. Vientos de 2.000 km/h, los más rápidos del sistema solar.",
+  "m_nep_ice": "5.000 km. El manto de hielo: agua y amoníaco calientes y densos, nada de nieve.",
+  "m_nep_diamond": "10.000 km. Aquí literalmente llueven diamantes.",
+  "m_nep_core": "20.000 km. Un núcleo rocoso del tamaño de la Tierra.",
+  "m_nep_center": "24.622 km. EL CENTRO DE NEPTUNO. Mitad del camino.",
+  "m_jup_storm": "50 km. La Gran Mancha Roja: una tormenta más grande que la Tierra que ruge desde hace siglos.",
+  "m_jup_ocean": "1.000 km. No hay superficie. El gas simplemente se vuelve líquido.",
+  "m_jup_metal": "20.000 km. Hidrógeno metálico: tanta presión que el hidrógeno se comporta como un metal.",
+  "m_jup_core": "60.000 km. Un núcleo difuso, 25 veces la masa de la Tierra.",
+  "m_jup_center": "69.911 km. EL CENTRO DE JÚPITER. Mitad del camino. Arriba, hacia el otro lado.",
+  "m_sun_photo": "500 km. Atravesaste la fotosfera, la capa que hace la luz del día.",
+  "m_sun_convect": "200.000 km. La zona convectiva: plasma hirviendo como una olla.",
+  "m_sun_core": "500.000 km. El núcleo. 15 millones de grados. Fusión.",
+  "m_sun_center": "696.000 km. EL CENTRO DEL SOL. No hay nada más profundo. Mitad del camino hacia el otro lado."
 }

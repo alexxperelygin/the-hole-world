@@ -1,5 +1,5 @@
 import { CFG } from './config';
-import { freshRun, type EconState } from './economy';
+import { freshRun, cfgOf, worldOf, type EconState } from './economy';
 
 export const SAVE_KEY = 'holeworld.v1';
 
@@ -23,12 +23,14 @@ export interface GameState extends EconState {
   seasonSeen: number;        // last season whose "humanity dug through" banner was shown
   countryNext: number;       // when the server allows the next country change (0 = any time)
   installed?: boolean;
+  world: number;             // which world the digger is in (index into CFG.worlds, 0 = Earth)
+  lap: number;               // completed laps of the world list
 }
 
 export function freshState(): GameState {
   return Object.assign({
     v: 1 as const, stars: 0, lifetime: 0, taps: 0, best: 0, runs: 0, finds: {}, country: null, lang: null, sound: true, crew: false,
-    lastSeen: Date.now(), daily: { date: null, streak: 0 }, newFinds: 0, onboard: 0, q: { date: null, list: [] }, fat: { date: null, active: 0, until: 0 }, firstDay: null, ref: null, refBy: null, seq: 0, friends: 0, boost: false, seasonSeen: 0, countryNext: 0,
+    lastSeen: Date.now(), daily: { date: null, streak: 0 }, newFinds: 0, onboard: 0, q: { date: null, list: [] }, fat: { date: null, active: 0, until: 0 }, firstDay: null, ref: null, refBy: null, seq: 0, friends: 0, boost: false, seasonSeen: 0, countryNext: 0, world: 0, lap: 0,
   }, freshRun(CFG));
 }
 
@@ -40,6 +42,9 @@ export const store = {
 };
 
 export let S: GameState = freshState();
+/* the balance config of the world the player is digging right now (layers, radius, finds, milestones) */
+export const W = () => cfgOf(S);
+export const worldNow = () => worldOf(S.world || 0);
 export function setState(s: GameState) { S = s; }
 export function save() { S.lastSeen = Date.now(); store.set(SAVE_KEY, S); }
 export function loadSaved(): GameState | null { return fromSaved(store.get<Partial<GameState>>(SAVE_KEY)); }

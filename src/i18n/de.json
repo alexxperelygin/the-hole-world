@@ -65,7 +65,7 @@
   "breakthrough": "Du hast den ganzen Planeten durchgegraben!",
   "came_out": "Rausgekommen bist du hier. Gestartet in: {from}",
   "splash": "PLATSCH!",
-  "reward": "Belohnung: +50 % auf alles, für immer. Deine Sammlung bleibt.",
+  "reward": "Belohnung: ×{x} auf alles, für immer. Deine Sammlung bleibt.",
   "dig_again": "Nochmal graben",
   "share": "Teilen",
   "copy": "Text kopieren",
@@ -98,7 +98,36 @@
     "umantle": "Oberer Mantel",
     "lmantle": "Unterer Mantel",
     "ocore": "Äußerer Kern",
-    "icore": "Innerer Kern"
+    "icore": "Innerer Kern",
+    "regolith": "Regolith",
+    "megareg": "Megaregolith",
+    "anorth": "Anorthosit-Kruste",
+    "mmantle": "Mondmantel",
+    "mcore": "Mondkern",
+    "rdust": "Roter Staub",
+    "permafr": "Permafrost",
+    "mbasalt": "Marsbasalt",
+    "rmantle": "Marsmantel",
+    "rcore": "Marskern",
+    "vlava": "Lavaebenen",
+    "vbasalt": "Venusbasalt",
+    "vlitho": "Lithosphäre",
+    "vmantle": "Venusmantel",
+    "vcore": "Venuskern",
+    "nclouds": "Methanwolken",
+    "nhydro": "Wasserstoffmeer",
+    "nice": "Eismantel",
+    "ndiamond": "Diamantregen",
+    "ncore": "Gesteinskern",
+    "jclouds": "Wolkendecke",
+    "jstorm": "Großer Roter Fleck",
+    "jhydro": "Flüssiger Wasserstoff",
+    "jmetal": "Metallischer Wasserstoff",
+    "jcore": "Jupiterkern",
+    "photo": "Photosphäre",
+    "convect": "Konvektionszone",
+    "radiat": "Strahlungszone",
+    "fusion": "Fusionskern"
   },
   "tools": {
     "spoon": "Löffel",
@@ -182,6 +211,180 @@
       "Kernkristall",
       "Winzige Sonne",
       "Herz der Erde"
+    ],
+    "regolith": [
+      "Mondstein",
+      "Fußabdruck",
+      "Gehisste Flagge",
+      "Grüner Käse"
+    ],
+    "megareg": [
+      "Verlorene Schraube",
+      "Toter Satellit",
+      "Mondstiefel",
+      "Abgestürzter Lander"
+    ],
+    "anorth": [
+      "Weißer Kiesel",
+      "Mondkristall",
+      "Vergrabenes Teleskop",
+      "Blaues Auge"
+    ],
+    "mmantle": [
+      "Dunkles Glas",
+      "Heißes Magma",
+      "Mini-Saturn",
+      "Mond-Alien"
+    ],
+    "mcore": [
+      "Eisenmagnet",
+      "Monddiamant",
+      "Vollmond",
+      "Neumond"
+    ],
+    "rdust": [
+      "Staubteufel",
+      "Dosenbohnen",
+      "Alter Rover",
+      "Verlorene Sonde"
+    ],
+    "permafr": [
+      "Eisblock",
+      "Marsmikrobe",
+      "Alien-DNA",
+      "Fossiler Fisch"
+    ],
+    "mbasalt": [
+      "Schwarzer Basalt",
+      "Magnetstein",
+      "Olympus-Kiesel",
+      "Marsgesicht"
+    ],
+    "rmantle": [
+      "Toter Vulkan",
+      "Roter Kristall",
+      "Mantelplume",
+      "Sanddrache"
+    ],
+    "rcore": [
+      "Rostiges Zahnrad",
+      "Marsdiamant",
+      "Ringkiesel",
+      "Kleines grünes Männchen"
+    ],
+    "vlava": [
+      "Frische Lava",
+      "Säureblase",
+      "Geschmolzene Sonde",
+      "Krone der Venus"
+    ],
+    "vbasalt": [
+      "Heißer Basalt",
+      "Schwefelfläschchen",
+      "Wolkige Kugel",
+      "Geschmolzener Ring"
+    ],
+    "vlitho": [
+      "Magnetstein",
+      "Druckkristall",
+      "Uralter Schlüssel",
+      "Lavaskorpion"
+    ],
+    "vmantle": [
+      "Mantelfeuer",
+      "Alchemistenkolben",
+      "Magmaschlange",
+      "Venusdrache"
+    ],
+    "vcore": [
+      "Kernblitz",
+      "Kerndiamant",
+      "Winzige Sonne",
+      "Königin der Venus"
+    ],
+    "nclouds": [
+      "Zirrusfetzen",
+      "Sturmauge",
+      "Verlorener Drachen",
+      "Himmelswal"
+    ],
+    "nhydro": [
+      "Wasserstoffblase",
+      "Eissplitter",
+      "Tiefseekolben",
+      "Meerjungfrau"
+    ],
+    "nice": [
+      "Schneeflocke",
+      "Blauer Kristall",
+      "Uraltes Eis",
+      "Eiskrake"
+    ],
+    "ndiamond": [
+      "Diamanttropfen",
+      "Blauer Diamant",
+      "Diamantkrone",
+      "Dreizack des Neptun"
+    ],
+    "ncore": [
+      "Kernstein",
+      "Kernmagnet",
+      "Taschengalaxie",
+      "Tiefseekrake"
+    ],
+    "jclouds": [
+      "Ammoniakwolke",
+      "Wetterballon",
+      "Verlorener Fallschirm",
+      "Sturmadler"
+    ],
+    "jstorm": [
+      "Sturmspirale",
+      "Jupiterblitz",
+      "Roter Tropfen",
+      "Auge des Flecks"
+    ],
+    "jhydro": [
+      "Wasserstoffperle",
+      "Druckfläschchen",
+      "Innere Welle",
+      "Wasserstoffwal"
+    ],
+    "jmetal": [
+      "Metallmagnet",
+      "Riesenzahnrad",
+      "Goldene Schraube",
+      "Kernroboter"
+    ],
+    "jcore": [
+      "Steinernes Herz",
+      "Jupiterdiamant",
+      "Verhinderter Stern",
+      "Krone des Jupiter"
+    ],
+    "photo": [
+      "Sonneneruption",
+      "Sonnenfleck",
+      "Geschmolzene Sonnenbrille",
+      "Phönixfeder"
+    ],
+    "convect": [
+      "Plasmablase",
+      "Kaputtes Thermometer",
+      "Sonnenblitz",
+      "Feuervogel"
+    ],
+    "radiat": [
+      "Verirrtes Photon",
+      "Uraltes Licht",
+      "Heller Blitz",
+      "Lichtdschinn"
+    ],
+    "fusion": [
+      "Heliumatom",
+      "Sternendiamant",
+      "Neugeborener Stern",
+      "Trophäe der Sonne"
     ]
   },
   "oceans": {
@@ -237,7 +440,36 @@
     "m_diamond": "Diamanten",
     "m_ocore": "Äußerer Kern",
     "m_icore": "Innerer Kern",
-    "m_center": "Erdmittelpunkt"
+    "m_center": "Erdmittelpunkt",
+    "m_moon_reg": "Megaregolith",
+    "m_moon_crust": "Mondkruste",
+    "m_moon_mantle": "Mondmantel",
+    "m_moon_core": "Mondkern",
+    "m_moon_center": "Mondmittelpunkt",
+    "m_mars_ice": "Permafrost",
+    "m_mars_basalt": "Basalt",
+    "m_mars_olympus": "Olympus Mons",
+    "m_mars_mantle": "Marsmantel",
+    "m_mars_center": "Marsmittelpunkt",
+    "m_venus_plains": "Lavaebenen",
+    "m_venus_crust": "Venuskruste",
+    "m_venus_mantle": "Venusmantel",
+    "m_venus_core": "Venuskern",
+    "m_venus_center": "Venusmittelpunkt",
+    "m_nep_wind": "Sturmwinde",
+    "m_nep_ice": "Eismantel",
+    "m_nep_diamond": "Diamantregen",
+    "m_nep_core": "Gesteinskern",
+    "m_nep_center": "Neptunmittelpunkt",
+    "m_jup_storm": "Großer Roter Fleck",
+    "m_jup_ocean": "Wasserstoffozean",
+    "m_jup_metal": "Metall-Wasserstoff",
+    "m_jup_core": "Jupiterkern",
+    "m_jup_center": "Jupitermittelpunkt",
+    "m_sun_photo": "Photosphäre",
+    "m_sun_convect": "Konvektionszone",
+    "m_sun_core": "Fusionskern",
+    "m_sun_center": "Sonnenmittelpunkt"
   },
   "quests": "Tagesaufgaben",
   "quest_taps": "{n}-mal tippen",
@@ -285,5 +517,50 @@
   "country_next": "Nächster Wechsel: {d}",
   "cloud_restored": "Fortschritt aus der Cloud wiederhergestellt",
   "season_done_title": "Die Menschheit hat die Erde durchgegraben!",
-  "season_done_body": "Danke an die Top-Länder. Alle graben {h} Stunden lang ×2, dann beginnt eine neue Saison."
+  "season_done_body": "Danke an die Top-Länder. Alle graben {h} Stunden lang ×2, dann beginnt eine neue Saison.",
+  "dug_through_world": "{w}: durchgegraben!",
+  "next_world": "Nächste Welt",
+  "dig_world": "Weiter graben: {w}",
+  "world_harder": "Gestein ×{x} härter als hier, du ×{m} stärker als am Anfang.",
+  "lap": "Runde {n}",
+  "far_side_of": "andere Seite ({w})",
+  "to_center_of": "bis zum Mittelpunkt ({w})",
+  "worlds": {
+    "earth": "Erde",
+    "moon": "Mond",
+    "mars": "Mars",
+    "venus": "Venus",
+    "neptune": "Neptun",
+    "jupiter": "Jupiter",
+    "sun": "Sonne"
+  },
+  "m_moon_reg": "15 m. Unter dem Staub: Gestein, zertrümmert von vier Milliarden Jahren Einschlägen.",
+  "m_moon_crust": "2 km. Die helle Kruste, die den Mond leuchten lässt.",
+  "m_moon_mantle": "50 km. Durch die Mondkruste. Ein Sechstel der Schwerkraft, dasselbe Graben.",
+  "m_moon_core": "1.400 km. Der Mond hat doch einen winzigen Eisenkern.",
+  "m_moon_center": "1.737 km. DER MONDMITTELPUNKT. Jetzt hoch zur Rückseite, die von der Erde aus nie jemand sieht.",
+  "m_mars_ice": "20 m. Permafrost. Auf dem Mars gibt es mehr Wasser, als man denkt.",
+  "m_mars_basalt": "500 m. Altes Vulkangestein. Der Mars hatte einmal Lava.",
+  "m_mars_olympus": "21,9 km. Der Olympus Mons, der höchste Vulkan des Sonnensystems, würde in dein Loch passen.",
+  "m_mars_mantle": "50 km. Die Marskruste ist dicker als die der Erde. Du bist durch.",
+  "m_mars_center": "3.390 km. DER MARSMITTELPUNKT. Halbzeit. Grab nach oben!",
+  "m_venus_plains": "10 m. Oberfläche: 465 °C und 90 Atmosphären. Deine Schaufel schmilzt ein bisschen.",
+  "m_venus_crust": "500 m. Junger Basalt. Die Venus hat sich vor nicht allzu langer Zeit mit Lava neu überzogen.",
+  "m_venus_mantle": "60 km. Durch die Kruste des bösen Zwillings der Erde.",
+  "m_venus_core": "3.000 km. Der Kern der Venus. Wahrscheinlich flüssig. Sicher weiß es niemand.",
+  "m_venus_center": "6.052 km. DER VENUSMITTELPUNKT. Halbzeit.",
+  "m_nep_wind": "1 km. Wind mit 2.000 km/h, der schnellste im Sonnensystem.",
+  "m_nep_ice": "5.000 km. Der Eismantel: heißes, dichtes Wasser und Ammoniak, kein Schnee.",
+  "m_nep_diamond": "10.000 km. Hier regnet es buchstäblich Diamanten.",
+  "m_nep_core": "20.000 km. Ein Gesteinskern so groß wie die Erde.",
+  "m_nep_center": "24.622 km. DER NEPTUNMITTELPUNKT. Halbzeit.",
+  "m_jup_storm": "50 km. Der Große Rote Fleck: ein Sturm größer als die Erde, der seit Jahrhunderten tobt.",
+  "m_jup_ocean": "1.000 km. Keine Oberfläche. Das Gas wird einfach flüssig.",
+  "m_jup_metal": "20.000 km. Metallischer Wasserstoff: Der Druck ist so hoch, dass Wasserstoff sich wie Metall verhält.",
+  "m_jup_core": "60.000 km. Ein verschwommener Kern, 25-mal so schwer wie die Erde.",
+  "m_jup_center": "69.911 km. DER JUPITERMITTELPUNKT. Halbzeit. Hoch durch die andere Seite.",
+  "m_sun_photo": "500 km. Durch die Photosphäre, die Schicht, die das Tageslicht macht.",
+  "m_sun_convect": "200.000 km. Die Konvektionszone: Plasma, das kocht wie im Topf.",
+  "m_sun_core": "500.000 km. Der Kern. 15 Millionen Grad. Fusion.",
+  "m_sun_center": "696.000 km. DER SONNENMITTELPUNKT. Tiefer geht es nicht. Halbzeit auf dem Weg zur anderen Seite."
 }

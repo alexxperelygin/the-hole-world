@@ -65,7 +65,7 @@
   "breakthrough": "Você atravessou o planeta inteiro!",
   "came_out": "Começou em: {from}",
   "splash": "SPLASH!",
-  "reward": "Recompensa: +50% em tudo, para sempre. Sua coleção fica.",
+  "reward": "Recompensa: ×{x} em tudo, para sempre. Sua coleção fica.",
   "dig_again": "Cavar de novo",
   "share": "Compartilhar",
   "copy": "Copiar texto",
@@ -98,7 +98,36 @@
     "umantle": "Manto superior",
     "lmantle": "Manto inferior",
     "ocore": "Núcleo externo",
-    "icore": "Núcleo interno"
+    "icore": "Núcleo interno",
+    "regolith": "Regolito",
+    "megareg": "Megarregolito",
+    "anorth": "Crosta de anortosito",
+    "mmantle": "Manto lunar",
+    "mcore": "Núcleo lunar",
+    "rdust": "Poeira vermelha",
+    "permafr": "Permafrost",
+    "mbasalt": "Basalto marciano",
+    "rmantle": "Manto marciano",
+    "rcore": "Núcleo marciano",
+    "vlava": "Planícies de lava",
+    "vbasalt": "Basalto venusiano",
+    "vlitho": "Litosfera",
+    "vmantle": "Manto venusiano",
+    "vcore": "Núcleo venusiano",
+    "nclouds": "Nuvens de metano",
+    "nhydro": "Mar de hidrogênio",
+    "nice": "Manto de gelo",
+    "ndiamond": "Chuva de diamantes",
+    "ncore": "Núcleo rochoso",
+    "jclouds": "Topo das nuvens",
+    "jstorm": "Grande Mancha Vermelha",
+    "jhydro": "Hidrogênio líquido",
+    "jmetal": "Hidrogênio metálico",
+    "jcore": "Núcleo joviano",
+    "photo": "Fotosfera",
+    "convect": "Zona convectiva",
+    "radiat": "Zona radiativa",
+    "fusion": "Núcleo de fusão"
   },
   "tools": {
     "spoon": "Colher",
@@ -182,6 +211,180 @@
       "Cristal do núcleo",
       "Sol minúsculo",
       "Coração da Terra"
+    ],
+    "regolith": [
+      "Rocha lunar",
+      "Pegada",
+      "Bandeira fincada",
+      "Queijo verde"
+    ],
+    "megareg": [
+      "Parafuso perdido",
+      "Satélite morto",
+      "Bota lunar",
+      "Módulo acidentado"
+    ],
+    "anorth": [
+      "Pedrinha branca",
+      "Cristal lunar",
+      "Telescópio enterrado",
+      "Olho azul"
+    ],
+    "mmantle": [
+      "Vidro escuro",
+      "Magma quente",
+      "Saturno minúsculo",
+      "Alien lunar"
+    ],
+    "mcore": [
+      "Ímã de ferro",
+      "Diamante lunar",
+      "Lua cheia",
+      "Lua nova"
+    ],
+    "rdust": [
+      "Redemoinho de poeira",
+      "Lata de feijão",
+      "Rover velho",
+      "Sonda perdida"
+    ],
+    "permafr": [
+      "Bloco de gelo",
+      "Micróbio marciano",
+      "DNA alienígena",
+      "Peixe fóssil"
+    ],
+    "mbasalt": [
+      "Basalto negro",
+      "Magnetita",
+      "Pedrinha do Olimpo",
+      "Face de Marte"
+    ],
+    "rmantle": [
+      "Vulcão morto",
+      "Cristal vermelho",
+      "Pluma do manto",
+      "Dragão de areia"
+    ],
+    "rcore": [
+      "Engrenagem enferrujada",
+      "Diamante de Marte",
+      "Pedrinha com anéis",
+      "Homenzinho verde"
+    ],
+    "vlava": [
+      "Lava fresca",
+      "Bolha de ácido",
+      "Sonda derretida",
+      "Coroa de Vênus"
+    ],
+    "vbasalt": [
+      "Basalto quente",
+      "Frasco de enxofre",
+      "Esfera nublada",
+      "Anel fundido"
+    ],
+    "vlitho": [
+      "Magnetita",
+      "Cristal de pressão",
+      "Chave ancestral",
+      "Escorpião de lava"
+    ],
+    "vmantle": [
+      "Fogo do manto",
+      "Frasco de alquimista",
+      "Serpente de magma",
+      "Dragão de Vênus"
+    ],
+    "vcore": [
+      "Raio do núcleo",
+      "Diamante do núcleo",
+      "Sol pequeno",
+      "Rainha de Vênus"
+    ],
+    "nclouds": [
+      "Fiapo de cirro",
+      "Olho da tempestade",
+      "Pipa perdida",
+      "Baleia do céu"
+    ],
+    "nhydro": [
+      "Bolha de hidrogênio",
+      "Lasca de gelo",
+      "Frasco abissal",
+      "Sereia"
+    ],
+    "nice": [
+      "Floco de neve",
+      "Cristal azul",
+      "Gelo ancestral",
+      "Kraken de gelo"
+    ],
+    "ndiamond": [
+      "Gota de diamante",
+      "Diamante azul",
+      "Coroa de diamantes",
+      "Tridente de Netuno"
+    ],
+    "ncore": [
+      "Rocha do núcleo",
+      "Ímã do núcleo",
+      "Galáxia de bolso",
+      "Polvo abissal"
+    ],
+    "jclouds": [
+      "Nuvem de amônia",
+      "Balão meteorológico",
+      "Paraquedas perdido",
+      "Águia da tempestade"
+    ],
+    "jstorm": [
+      "Espiral de tempestade",
+      "Raio joviano",
+      "Gota vermelha",
+      "Olho da Mancha"
+    ],
+    "jhydro": [
+      "Pérola de hidrogênio",
+      "Frasco de pressão",
+      "Onda interior",
+      "Baleia de hidrogênio"
+    ],
+    "jmetal": [
+      "Ímã metálico",
+      "Engrenagem gigante",
+      "Parafuso de ouro",
+      "Robô do núcleo"
+    ],
+    "jcore": [
+      "Coração rochoso",
+      "Diamante joviano",
+      "Estrela fracassada",
+      "Coroa de Júpiter"
+    ],
+    "photo": [
+      "Erupção solar",
+      "Mancha solar",
+      "Óculos derretidos",
+      "Pena de fênix"
+    ],
+    "convect": [
+      "Bolha de plasma",
+      "Termômetro quebrado",
+      "Raio solar",
+      "Pássaro de fogo"
+    ],
+    "radiat": [
+      "Fóton perdido",
+      "Luz ancestral",
+      "Clarão brilhante",
+      "Gênio de luz"
+    ],
+    "fusion": [
+      "Átomo de hélio",
+      "Diamante estelar",
+      "Estrela recém-nascida",
+      "Troféu do Sol"
     ]
   },
   "oceans": {
@@ -237,7 +440,36 @@
     "m_diamond": "Diamantes",
     "m_ocore": "Núcleo externo",
     "m_icore": "Núcleo interno",
-    "m_center": "Centro da Terra"
+    "m_center": "Centro da Terra",
+    "m_moon_reg": "Megarregolito",
+    "m_moon_crust": "Crosta lunar",
+    "m_moon_mantle": "Manto lunar",
+    "m_moon_core": "Núcleo lunar",
+    "m_moon_center": "Centro da Lua",
+    "m_mars_ice": "Permafrost",
+    "m_mars_basalt": "Basalto",
+    "m_mars_olympus": "Monte Olimpo",
+    "m_mars_mantle": "Manto marciano",
+    "m_mars_center": "Centro de Marte",
+    "m_venus_plains": "Planícies de lava",
+    "m_venus_crust": "Crosta venusiana",
+    "m_venus_mantle": "Manto venusiano",
+    "m_venus_core": "Núcleo venusiano",
+    "m_venus_center": "Centro de Vênus",
+    "m_nep_wind": "Ventos de tempestade",
+    "m_nep_ice": "Manto de gelo",
+    "m_nep_diamond": "Chuva de diamantes",
+    "m_nep_core": "Núcleo rochoso",
+    "m_nep_center": "Centro de Netuno",
+    "m_jup_storm": "Grande Mancha Vermelha",
+    "m_jup_ocean": "Oceano de hidrogênio",
+    "m_jup_metal": "Hidrogênio metálico",
+    "m_jup_core": "Núcleo joviano",
+    "m_jup_center": "Centro de Júpiter",
+    "m_sun_photo": "Fotosfera",
+    "m_sun_convect": "Zona convectiva",
+    "m_sun_core": "Núcleo de fusão",
+    "m_sun_center": "Centro do Sol"
   },
   "quests": "Missões diárias",
   "quest_taps": "Toque {n} vezes",
@@ -285,5 +517,50 @@
   "country_next": "Próxima troca: {d}",
   "cloud_restored": "Progresso restaurado da nuvem",
   "season_done_title": "A humanidade atravessou a Terra!",
-  "season_done_body": "Obrigado aos países líderes. Todos cavam ×2 por {h} horas, depois começa uma nova temporada."
+  "season_done_body": "Obrigado aos países líderes. Todos cavam ×2 por {h} horas, depois começa uma nova temporada.",
+  "dug_through_world": "Você atravessou {w}!",
+  "next_world": "Próximo mundo",
+  "dig_world": "Cavar {w}",
+  "world_harder": "Rocha ×{x} mais dura que aqui, você ×{m} mais forte que no começo.",
+  "lap": "Volta {n}",
+  "far_side_of": "{w}, o outro lado",
+  "to_center_of": "até o centro: {w}",
+  "worlds": {
+    "earth": "a Terra",
+    "moon": "a Lua",
+    "mars": "Marte",
+    "venus": "Vênus",
+    "neptune": "Netuno",
+    "jupiter": "Júpiter",
+    "sun": "o Sol"
+  },
+  "m_moon_reg": "15 m. Sob a poeira: rocha estilhaçada por quatro bilhões de anos de impactos.",
+  "m_moon_crust": "2 km. A crosta pálida que faz a Lua brilhar.",
+  "m_moon_mantle": "50 km. Você atravessou a crosta lunar. Um sexto da gravidade, a mesma cavação.",
+  "m_moon_core": "1.400 km. No fim das contas, a Lua tem um pequeno núcleo de ferro.",
+  "m_moon_center": "1.737 km. O CENTRO DA LUA. Agora para cima, até o lado oculto, que ninguém na Terra vê.",
+  "m_mars_ice": "20 m. Permafrost. Marte tem mais água do que as pessoas imaginam.",
+  "m_mars_basalt": "500 m. Rocha vulcânica antiga. Marte já teve lava.",
+  "m_mars_olympus": "21,9 km. O Monte Olimpo, o vulcão mais alto do Sistema Solar, caberia no seu buraco.",
+  "m_mars_mantle": "50 km. A crosta de Marte é mais grossa que a da Terra. Você já passou dela.",
+  "m_mars_center": "3.390 km. O CENTRO DE MARTE. Metade do caminho. Cave para cima!",
+  "m_venus_plains": "10 m. Superfície: 465 °C e 90 atmosferas. Sua pá está derretendo um pouquinho.",
+  "m_venus_crust": "500 m. Basalto jovem. Vênus refez a própria superfície com lava não faz muito tempo.",
+  "m_venus_mantle": "60 km. Você atravessou a crosta da gêmea má da Terra.",
+  "m_venus_core": "3.000 km. O núcleo de Vênus. Provavelmente líquido. Ninguém sabe ao certo.",
+  "m_venus_center": "6.052 km. O CENTRO DE VÊNUS. Metade do caminho.",
+  "m_nep_wind": "1 km. Ventos de 2.000 km/h, os mais rápidos do Sistema Solar.",
+  "m_nep_ice": "5.000 km. O manto de gelo: água e amônia quentes e densas, nada de neve.",
+  "m_nep_diamond": "10.000 km. Aqui chovem diamantes, literalmente.",
+  "m_nep_core": "20.000 km. Um núcleo rochoso do tamanho da Terra.",
+  "m_nep_center": "24.622 km. O CENTRO DE NETUNO. Metade do caminho.",
+  "m_jup_storm": "50 km. A Grande Mancha Vermelha: uma tempestade maior que a Terra, rugindo há séculos.",
+  "m_jup_ocean": "1.000 km. Não há superfície. O gás simplesmente vira líquido.",
+  "m_jup_metal": "20.000 km. Hidrogênio metálico: pressão tão alta que o hidrogênio se comporta como metal.",
+  "m_jup_core": "60.000 km. Um núcleo difuso, 25 vezes a massa da Terra.",
+  "m_jup_center": "69.911 km. O CENTRO DE JÚPITER. Metade do caminho. Para cima, rumo ao outro lado.",
+  "m_sun_photo": "500 km. Você atravessou a fotosfera, a camada que faz a luz do dia.",
+  "m_sun_convect": "200.000 km. A zona convectiva: plasma fervendo como uma panela.",
+  "m_sun_core": "500.000 km. O núcleo. 15 milhões de graus. Fusão.",
+  "m_sun_center": "696.000 km. O CENTRO DO SOL. Nada é mais fundo. Metade do caminho até o outro lado."
 }

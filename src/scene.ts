@@ -1,11 +1,11 @@
 /* Canvas 2D scene: strata, shaft, lamps, helpers, digger, particles, floating numbers. */
 import { CFG } from './config';
-import { S } from './state';
-import { layerAt, BOUNDS, clamp, tapPow, idleRate, type LayerInfo } from './economy';
+import { S, W as WC, worldNow } from './state';
+import { layerAt, boundsOf, clamp, metersPerTap, metersPerSec, type LayerInfo } from './economy';
+import type { Config } from './config';
 import { t } from './i18n';
 import { drawEmoji } from './ui/emoji';
 
-const L = CFG.layers;
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
 export const REDUCED = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -22,7 +22,18 @@ function shade(hex: string, a: number) {
   if (a < 0) { r *= 1 + a; g *= 1 + a; b *= 1 + a; } else { r += (255 - r) * a; g += (255 - g) * a; b += (255 - b) * a; }
   return `rgb(${r | 0},${g | 0},${b | 0})`;
 }
-export const PAL = L.map(l => ({ a: l.c[0], b: l.c[1], s1: l.c[1], s2: l.c[2], wall: shade(l.c[0], -0.25), shaft: shade(l.c[0], -0.72), line: shade(l.c[0], -0.5) }));
+type Pal = { a: string; b: string; s1: string; s2: string; wall: string; shaft: string; line: string };
+const palCache = new Map<Config, Pal[]>();
+/* palette of the current world's layers (cached per world config) */
+export function pal(wc: Config = WC()): Pal[] {
+  let p = palCache.get(wc); if (!p) { p = wc.layers.map(l => ({ a: l.c[0], b: l.c[1], s1: l.c[1], s2: l.c[2], wall: shade(l.c[0], -0.25), shaft: shade(l.c[0], -0.72), line: shade(l.c[0], -0.5) })); palCache.set(wc, p); }
+  return p;
+}
+let sky: [number, number, number][] = [[110, 185, 240], [185, 224, 252]];
+const hex = (h: string): [number, number, number] => { const n = parseInt(h.slice(1), 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+/* call after a prestige or a cloud restore: picks up the new world's sky */
+export function worldChanged() { const w = worldNow(); sky = [hex(w.sky[0]), hex(w.sky[1])]; }
+worldChanged();
 const SPECKS = Array.from({ length: 70 }, () => ({ x: Math.random(), y: Math.random() * 420, r: rnd(1.5, 4.5), k: (Math.random() < 0.5 ? 's1' : 's2') as 's1' | 's2', w: Math.random() < 0.12 }));
 
 export const cam = { viewDepth: 0, mpp: 0.025, shake: 0, swing: 0, now: performance.now() };
@@ -37,18 +48,18 @@ export function snap(depth: number) { cam.viewDepth = depth; }
 export function resetCamera() { cam.viewDepth = 0; cam.mpp = 0.025; }
 export function pushFloat(f: Float) { floats.push(f); if (floats.length > 30) floats.shift(); }
 export function burst(x: number, y: number, n: number, la: LayerInfo) {
-  if (REDUCED) n = Math.min(n, 4); const p = PAL[la.i];
+  if (REDUCED) n = Math.min(n, 4); const p = pal()[la.i];
   for (let i = 0; i < n; i++) { if (parts.length > 260) parts.shift(); parts.push({ x: x + rnd(-14, 14), y: y - 4, vx: rnd(-260, 260), vy: rnd(-520, -180), s: rnd(3, 7), life: rnd(0.45, 0.9), c: [p.a, p.s1, p.s2, p.line][i % 4] }); }
 }
 /* camera follows the digger; zoom depends on dig speed */
 export function camera(dt: number) {
-  const ir = idleRate(S);
-  const target = Math.max(0.02, tapPow(S) / 4, ir / 30);
+  const ir = metersPerSec(S);
+  const target = Math.max(0.02, metersPerTap(S) / 4, ir / 30);
   cam.mpp += (target - cam.mpp) * Math.min(1, dt * 2.5);
   const diff = S.depth - cam.viewDepth; cam.viewDepth = Math.abs(diff) > cam.mpp * ch * 40 ? S.depth : cam.viewDepth + diff * Math.min(1, dt * 12);
 }
 
-function skyCol(y: number, below: boolean) { const k = clamp(y / Math.max(1, ch), 0, 1); return below ? `rgb(${120 + k * 60 | 0},${190 + k * 40 | 0},${235 + k * 15 | 0})` : `rgb(${110 + k * 90 | 0},${185 + k * 50 | 0},${240 + k * 12 | 0})`; }
+function skyCol(y: number, below: boolean) { const k = clamp(y / Math.max(1, ch), 0, 1) * (below ? 0.6 : 1); const [a, b] = sky; return `rgb(${a[0] + (b[0] - a[0]) * k | 0},${a[1] + (b[1] - a[1]) * k | 0},${a[2] + (b[2] - a[2]) * k | 0})`; }
 
 export function draw(dt: number, ts: number) {
   cam.now = ts;
@@ -57,17 +68,18 @@ export function draw(dt: number, ts: number) {
   if (cam.shake > 0.2 && !REDUCED) { ox = rnd(-cam.shake, cam.shake); oy = rnd(-cam.shake, cam.shake); cam.shake *= Math.pow(0.02, dt); } else cam.shake = 0;
   ctx.save(); ctx.translate(ox, oy);
   const dY = digY(), shaftW = Math.min(W * 0.34, 210), sx0 = (W - shaftW) / 2, sx1 = sx0 + shaftW, vd = cam.viewDepth, mpp = cam.mpp;
+  const wc = WC(), L = wc.layers, PAL = pal(wc), through = wc.through;
   const yOf = (d: number) => dY + (d - vd) / mpp;
   const step = 3;
   for (let y = -10; y < H + 10; y += step) {
     const d = vd + (y - dY) * mpp;
-    if (d < 0 || d > CFG.through) { ctx.fillStyle = skyCol(y, d > CFG.through); ctx.fillRect(-10, y, W + 20, step); continue; }
-    const la = layerAt(d), p = PAL[la.i];
+    if (d < 0 || d > through) { ctx.fillStyle = skyCol(y, d > through); ctx.fillRect(-10, y, W + 20, step); continue; }
+    const la = layerAt(d, wc), p = PAL[la.i];
     ctx.fillStyle = (Math.floor(d / mpp / 18) & 1) ? p.a : p.b;
     if (y < dY) { ctx.fillRect(-10, y, sx0 + 10, step); ctx.fillRect(sx1, y, W - sx1 + 10, step); ctx.fillStyle = p.shaft; ctx.fillRect(sx0, y, shaftW, step); }
     else ctx.fillRect(-10, y, W + 20, step);
   }
-  const surfY = yOf(0), outY = yOf(CFG.through);
+  const surfY = yOf(0), outY = yOf(through);
   const shaftTop = Math.max(-10, surfY);
   if (shaftTop < dY) {
     const g = ctx.createLinearGradient(sx0, 0, sx1, 0); g.addColorStop(0, 'rgba(0,0,0,.45)'); g.addColorStop(0.18, 'rgba(0,0,0,0)'); g.addColorStop(0.82, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.45)');
@@ -76,17 +88,17 @@ export function draw(dt: number, ts: number) {
   const off = ((vd / mpp) % 420 + 420) % 420;
   for (let k = -1; k <= Math.ceil(H / 420) + 1; k++) for (const s of SPECKS) {
     const y = k * 420 + s.y - off; if (y < -6 || y > H + 6) continue;
-    const d = vd + (y - dY) * mpp; if (d < 0 || d > CFG.through) continue;
+    const d = vd + (y - dY) * mpp; if (d < 0 || d > through) continue;
     const x = s.x * W; if (y < dY && x > sx0 - 2 && x < sx1 + 2) continue;
-    const p = PAL[layerAt(d).i]; ctx.fillStyle = s.w ? 'rgba(255,255,255,.18)' : p[s.k];
+    const p = PAL[layerAt(d, wc).i]; ctx.fillStyle = s.w ? 'rgba(255,255,255,.18)' : p[s.k];
     ctx.fillRect(x, y, s.r * 1.6, s.r);
   }
   for (const gy of [surfY, outY]) if (gy > -12 && gy < H + 12) {
-    ctx.fillStyle = '#4fae3d'; ctx.fillRect(-10, gy - 2, (gy === surfY ? sx0 : W) + 10, 7); if (gy === surfY) ctx.fillRect(sx1, gy - 2, W - sx1 + 10, 7);
-    ctx.fillStyle = '#6fd257'; for (let x = 0; x < W; x += 9) { if (gy === surfY && x > sx0 - 4 && x < sx1) continue; ctx.fillRect(x, gy - 6, 3, 6); }
+    const gr = worldNow().ground; ctx.fillStyle = gr[0]; ctx.fillRect(-10, gy - 2, (gy === surfY ? sx0 : W) + 10, 7); if (gy === surfY) ctx.fillRect(sx1, gy - 2, W - sx1 + 10, 7);
+    ctx.fillStyle = gr[1]; for (let x = 0; x < W; x += 9) { if (gy === surfY && x > sx0 - 4 && x < sx1) continue; ctx.fillRect(x, gy - 6, 3, 6); }
   }
   ctx.font = '600 11px Onest, system-ui, sans-serif'; ctx.textBaseline = 'top';
-  for (const b of BOUNDS) {
+  for (const b of boundsOf(wc)) {
     const y = yOf(b.d); if (y < -20 || y > H + 20 || b.out) continue;
     ctx.strokeStyle = b.center ? 'rgba(255,240,180,.85)' : 'rgba(0,0,0,.42)'; ctx.lineWidth = b.center ? 3 : 2;
     ctx.beginPath(); for (let x = -10; x <= W + 10; x += 12) { const yy = y + (((x * 7 + b.d) % 5) - 2); if (x === -10) ctx.moveTo(x, yy); else ctx.lineTo(x, yy); } ctx.stroke();
@@ -101,9 +113,9 @@ export function draw(dt: number, ts: number) {
       const gg = ctx.createRadialGradient(x, y, 1, x, y, 26); gg.addColorStop(0, 'rgba(255,214,120,.55)'); gg.addColorStop(1, 'rgba(255,214,120,0)'); ctx.fillStyle = gg; ctx.fillRect(x - 26, y - 26, 52, 52);
       ctx.fillStyle = '#ffe7a6'; ctx.beginPath(); ctx.arc(x, y, 3, 0, 7); ctx.fill(); }
   }
-  const la = layerAt(vd);
-  if (la.i >= 5) { const pulse = 0.5 + 0.5 * Math.sin(ts / 600); const a = (la.i - 4) * 0.06 + pulse * 0.06; const gg = ctx.createRadialGradient(W / 2, dY + 40, 10, W / 2, dY + 40, Math.max(W, H) * 0.7);
-    gg.addColorStop(0, la.i >= 8 ? `rgba(255,236,150,${a + 0.1})` : `rgba(255,120,40,${a})`); gg.addColorStop(1, 'rgba(255,90,20,0)'); ctx.fillStyle = gg; ctx.fillRect(0, 0, W, H); }
+  const la = layerAt(vd, wc);
+  if (la.i >= L.length - 4) { const pulse = 0.5 + 0.5 * Math.sin(ts / 600); const a = (la.i - (L.length - 5)) * 0.06 + pulse * 0.06; const gg = ctx.createRadialGradient(W / 2, dY + 40, 10, W / 2, dY + 40, Math.max(W, H) * 0.7);
+    gg.addColorStop(0, la.i >= L.length - 1 ? `rgba(255,236,150,${a + 0.1})` : `rgba(255,120,40,${a})`); gg.addColorStop(1, 'rgba(255,90,20,0)'); ctx.fillStyle = gg; ctx.fillRect(0, 0, W, H); }
   ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.ellipse(W / 2, dY + 2, shaftW * 0.42, 7, 0, 0, 7); ctx.fill();
   // helpers along the walls
   const owned: number[] = []; for (let i = CFG.helpers.length - 1; i >= 0 && owned.length < 6; i--) if (S.helpers[i] > 0) owned.push(i);

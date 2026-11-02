@@ -65,7 +65,7 @@
   "breakthrough": "Gezegeni baştan sona deldin!",
   "came_out": "Öbür tarafa çıktın! Başlangıç: {from}",
   "splash": "ŞLAP!",
-  "reward": "Ödül: her şeye +50%, sonsuza dek. Koleksiyonun kalır.",
+  "reward": "Ödül: her şeye ×{x}, sonsuza dek. Koleksiyonun kalır.",
   "dig_again": "Yeniden kaz",
   "share": "Paylaş",
   "copy": "Metni kopyala",
@@ -98,7 +98,36 @@
     "umantle": "Üst manto",
     "lmantle": "Alt manto",
     "ocore": "Dış çekirdek",
-    "icore": "İç çekirdek"
+    "icore": "İç çekirdek",
+    "regolith": "Regolit",
+    "megareg": "Megaregolit",
+    "anorth": "Anortozit kabuk",
+    "mmantle": "Ay mantosu",
+    "mcore": "Ay çekirdeği",
+    "rdust": "Kızıl toz",
+    "permafr": "Donmuş toprak",
+    "mbasalt": "Mars bazaltı",
+    "rmantle": "Mars mantosu",
+    "rcore": "Mars çekirdeği",
+    "vlava": "Lav ovaları",
+    "vbasalt": "Venüs bazaltı",
+    "vlitho": "Litosfer",
+    "vmantle": "Venüs mantosu",
+    "vcore": "Venüs çekirdeği",
+    "nclouds": "Metan bulutları",
+    "nhydro": "Hidrojen denizi",
+    "nice": "Buz mantosu",
+    "ndiamond": "Elmas yağmuru",
+    "ncore": "Kayaç çekirdek",
+    "jclouds": "Bulut tepeleri",
+    "jstorm": "Büyük Kırmızı Leke",
+    "jhydro": "Sıvı hidrojen",
+    "jmetal": "Metalik hidrojen",
+    "jcore": "Jüpiter çekirdeği",
+    "photo": "Fotosfer",
+    "convect": "Konveksiyon bölgesi",
+    "radiat": "Işınım bölgesi",
+    "fusion": "Füzyon çekirdeği"
   },
   "tools": {
     "spoon": "Kaşık",
@@ -182,6 +211,180 @@
       "Çekirdek kristali",
       "Minik güneş",
       "Dünya'nın Kalbi"
+    ],
+    "regolith": [
+      "Ay taşı",
+      "Ayak izi",
+      "Dikili bayrak",
+      "Yeşil peynir"
+    ],
+    "megareg": [
+      "Kayıp cıvata",
+      "Ölü uydu",
+      "Ay botu",
+      "Düşmüş iniş aracı"
+    ],
+    "anorth": [
+      "Beyaz çakıl",
+      "Ay kristali",
+      "Gömülü teleskop",
+      "Mavi göz"
+    ],
+    "mmantle": [
+      "Kara cam",
+      "Sıcak magma",
+      "Minik Satürn",
+      "Ay uzaylısı"
+    ],
+    "mcore": [
+      "Demir mıknatıs",
+      "Ay elması",
+      "Dolunay",
+      "Yeni ay"
+    ],
+    "rdust": [
+      "Toz şeytanı",
+      "Konserve fasulye",
+      "Eski gezgin",
+      "Kayıp sonda"
+    ],
+    "permafr": [
+      "Buz bloğu",
+      "Mars mikrobu",
+      "Uzaylı DNA'sı",
+      "Fosil balık"
+    ],
+    "mbasalt": [
+      "Kara bazalt",
+      "Mıknatıs taşı",
+      "Olympus çakılı",
+      "Mars'ın Yüzü"
+    ],
+    "rmantle": [
+      "Ölü yanardağ",
+      "Kızıl kristal",
+      "Manto sorgucu",
+      "Kum ejderhası"
+    ],
+    "rcore": [
+      "Paslı dişli",
+      "Mars elması",
+      "Halkalı çakıl",
+      "Küçük yeşil adam"
+    ],
+    "vlava": [
+      "Taze lav",
+      "Asit kabarcığı",
+      "Erimiş sonda",
+      "Venüs'ün Tacı"
+    ],
+    "vbasalt": [
+      "Sıcak bazalt",
+      "Kükürt şişesi",
+      "Bulutlu küre",
+      "Erimiş halka"
+    ],
+    "vlitho": [
+      "Mıknatıs taşı",
+      "Basınç kristali",
+      "Antik anahtar",
+      "Lav akrebi"
+    ],
+    "vmantle": [
+      "Manto ateşi",
+      "Simyacı şişesi",
+      "Magma yılanı",
+      "Venüs ejderhası"
+    ],
+    "vcore": [
+      "Çekirdek şimşeği",
+      "Çekirdek elması",
+      "Minik güneş",
+      "Venüs Kraliçesi"
+    ],
+    "nclouds": [
+      "Sirrus tutamı",
+      "Fırtına gözü",
+      "Kayıp uçurtma",
+      "Gök balinası"
+    ],
+    "nhydro": [
+      "Hidrojen kabarcığı",
+      "Buz kıymığı",
+      "Derinlik şişesi",
+      "Deniz kızı"
+    ],
+    "nice": [
+      "Kar tanesi",
+      "Mavi kristal",
+      "Kadim buz",
+      "Buz krakeni"
+    ],
+    "ndiamond": [
+      "Elmas damlası",
+      "Mavi elmas",
+      "Elmas taç",
+      "Neptün'ün Üçlü Mızrağı"
+    ],
+    "ncore": [
+      "Çekirdek kayası",
+      "Çekirdek mıknatısı",
+      "Cep galaksisi",
+      "Derin ahtapot"
+    ],
+    "jclouds": [
+      "Amonyak bulutu",
+      "Meteoroloji balonu",
+      "Kayıp paraşüt",
+      "Fırtına kartalı"
+    ],
+    "jstorm": [
+      "Fırtına sarmalı",
+      "Jüpiter şimşeği",
+      "Kızıl damla",
+      "Leke'nin Gözü"
+    ],
+    "jhydro": [
+      "Hidrojen incisi",
+      "Basınç şişesi",
+      "İç dalga",
+      "Hidrojen balinası"
+    ],
+    "jmetal": [
+      "Metal mıknatıs",
+      "Dev dişli",
+      "Altın cıvata",
+      "Çekirdek robotu"
+    ],
+    "jcore": [
+      "Kayaç kalp",
+      "Jüpiter elması",
+      "Olamamış yıldız",
+      "Jüpiter'in Tacı"
+    ],
+    "photo": [
+      "Güneş patlaması",
+      "Güneş lekesi",
+      "Erimiş güneş gözlüğü",
+      "Anka tüyü"
+    ],
+    "convect": [
+      "Plazma kabarcığı",
+      "Kırık termometre",
+      "Güneş şimşeği",
+      "Ateş kuşu"
+    ],
+    "radiat": [
+      "Başıboş foton",
+      "Kadim ışık",
+      "Parlak flaş",
+      "Işık cini"
+    ],
+    "fusion": [
+      "Helyum atomu",
+      "Yıldız elması",
+      "Yeni doğmuş yıldız",
+      "Güneş'in Kupası"
     ]
   },
   "oceans": {
@@ -237,7 +440,36 @@
     "m_diamond": "Elmaslar",
     "m_ocore": "Dış çekirdek",
     "m_icore": "İç çekirdek",
-    "m_center": "Dünya'nın merkezi"
+    "m_center": "Dünya'nın merkezi",
+    "m_moon_reg": "Megaregolit",
+    "m_moon_crust": "Ay kabuğu",
+    "m_moon_mantle": "Ay mantosu",
+    "m_moon_core": "Ay çekirdeği",
+    "m_moon_center": "Ay'ın merkezi",
+    "m_mars_ice": "Donmuş toprak",
+    "m_mars_basalt": "Bazalt",
+    "m_mars_olympus": "Olympus Dağı",
+    "m_mars_mantle": "Mars mantosu",
+    "m_mars_center": "Mars'ın merkezi",
+    "m_venus_plains": "Lav ovaları",
+    "m_venus_crust": "Venüs kabuğu",
+    "m_venus_mantle": "Venüs mantosu",
+    "m_venus_core": "Venüs çekirdeği",
+    "m_venus_center": "Venüs'ün merkezi",
+    "m_nep_wind": "Fırtına rüzgârları",
+    "m_nep_ice": "Buz mantosu",
+    "m_nep_diamond": "Elmas yağmuru",
+    "m_nep_core": "Kayaç çekirdek",
+    "m_nep_center": "Neptün'ün merkezi",
+    "m_jup_storm": "Büyük Kırmızı Leke",
+    "m_jup_ocean": "Hidrojen okyanusu",
+    "m_jup_metal": "Metalik hidrojen",
+    "m_jup_core": "Jüpiter çekirdeği",
+    "m_jup_center": "Jüpiter'in merkezi",
+    "m_sun_photo": "Fotosfer",
+    "m_sun_convect": "Konveksiyon bölgesi",
+    "m_sun_core": "Füzyon çekirdeği",
+    "m_sun_center": "Güneş'in merkezi"
   },
   "quests": "Günlük görevler",
   "quest_taps": "{n} kez dokun",
@@ -285,5 +517,50 @@
   "country_next": "Sonraki değişim: {d}",
   "cloud_restored": "İlerleme buluttan geri yüklendi",
   "season_done_title": "İnsanlık Dünya'yı deldi!",
-  "season_done_body": "Lider ülkelere teşekkürler. Herkes {h} saat boyunca ×2 kazar, sonra yeni sezon başlar."
+  "season_done_body": "Lider ülkelere teşekkürler. Herkes {h} saat boyunca ×2 kazar, sonra yeni sezon başlar.",
+  "dug_through_world": "Delip geçtin: {w}!",
+  "next_world": "Sıradaki dünya",
+  "dig_world": "Kazmaya devam: {w}",
+  "world_harder": "Kaya buradakinden ×{x} daha sert, sen de başlangıçtakinden ×{m} daha güçlüsün.",
+  "lap": "Tur {n}",
+  "far_side_of": "öbür taraf ({w})",
+  "to_center_of": "{w} merkezine",
+  "worlds": {
+    "earth": "Dünya",
+    "moon": "Ay",
+    "mars": "Mars",
+    "venus": "Venüs",
+    "neptune": "Neptün",
+    "jupiter": "Jüpiter",
+    "sun": "Güneş"
+  },
+  "m_moon_reg": "15 m. Tozun altında: dört milyar yıllık çarpmalarla parçalanmış kaya.",
+  "m_moon_crust": "2 km. Ay'ı parlatan açık renkli kabuk.",
+  "m_moon_mantle": "50 km. Ay kabuğunu deldin. Yer çekimi altıda bir, kazma aynı.",
+  "m_moon_core": "1.400 km. Ay'ın da minik bir demir çekirdeği varmış.",
+  "m_moon_center": "1.737 km. AY'IN MERKEZİ. Şimdi yukarı, Dünya'dan kimsenin göremediği öbür tarafa.",
+  "m_mars_ice": "20 m. Donmuş toprak. Mars'ta sanıldığından çok daha fazla su var.",
+  "m_mars_basalt": "500 m. Eski volkanik kaya. Mars'ta bir zamanlar lav akardı.",
+  "m_mars_olympus": "21,9 km. Güneş Sistemi'nin en yüksek yanardağı Olympus Dağı çukuruna sığar.",
+  "m_mars_mantle": "50 km. Mars'ın kabuğu Dünya'nınkinden kalın. Onu da deldin.",
+  "m_mars_center": "3.390 km. MARS'IN MERKEZİ. Yarı yol. Yukarı kaz!",
+  "m_venus_plains": "10 m. Yüzey: 465 °C ve 90 atmosfer. Küreğin hafiften eriyor.",
+  "m_venus_crust": "500 m. Genç bazalt. Venüs kısa süre önce yüzeyini lavla yeniledi.",
+  "m_venus_mantle": "60 km. Dünya'nın kötü ikizinin kabuğunu deldin.",
+  "m_venus_core": "3.000 km. Venüs'ün çekirdeği. Muhtemelen sıvı. Kimse kesin bilmiyor.",
+  "m_venus_center": "6.052 km. VENÜS'ÜN MERKEZİ. Yarı yol.",
+  "m_nep_wind": "1 km. Rüzgâr 2.000 km/sa, Güneş Sistemi'nin en hızlısı.",
+  "m_nep_ice": "5.000 km. Buz mantosu: kar değil, sıcak ve yoğun su ile amonyak.",
+  "m_nep_diamond": "10.000 km. Burada gerçekten elmas yağıyor.",
+  "m_nep_core": "20.000 km. Dünya büyüklüğünde kayaç bir çekirdek.",
+  "m_nep_center": "24.622 km. NEPTÜN'ÜN MERKEZİ. Yarı yol.",
+  "m_jup_storm": "50 km. Büyük Kırmızı Leke: Dünya'dan büyük, yüzyıllardır süren bir fırtına.",
+  "m_jup_ocean": "1.000 km. Yüzey yok. Gaz öylece sıvıya dönüşüyor.",
+  "m_jup_metal": "20.000 km. Metalik hidrojen: basınç o kadar yüksek ki hidrojen metal gibi davranıyor.",
+  "m_jup_core": "60.000 km. Dünya'nın 25 katı kütlede, bulanık bir çekirdek.",
+  "m_jup_center": "69.911 km. JÜPİTER'İN MERKEZİ. Yarı yol. Öbür taraftan yukarı.",
+  "m_sun_photo": "500 km. Fotosferi deldin, gün ışığını yapan katmanı.",
+  "m_sun_convect": "200.000 km. Konveksiyon bölgesi: tencere gibi kaynayan plazma.",
+  "m_sun_core": "500.000 km. Çekirdek. 15 milyon derece. Füzyon.",
+  "m_sun_center": "696.000 km. GÜNEŞ'İN MERKEZİ. Daha derini yok. Öbür tarafa yarı yol."
 }

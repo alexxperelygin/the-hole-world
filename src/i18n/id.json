@@ -65,7 +65,7 @@
   "breakthrough": "Kamu menggali tembus seluruh planet!",
   "came_out": "Kamu keluar di sisi lain. Mulai dari: {from}",
   "splash": "BYUR!",
-  "reward": "Hadiah: +50% untuk semuanya, selamanya. Koleksimu tetap ada.",
+  "reward": "Hadiah: ×{x} untuk semuanya, selamanya. Koleksimu tetap ada.",
   "dig_again": "Gali lagi",
   "share": "Bagikan",
   "copy": "Salin teks",
@@ -98,7 +98,36 @@
     "umantle": "Mantel atas",
     "lmantle": "Mantel bawah",
     "ocore": "Inti luar",
-    "icore": "Inti dalam"
+    "icore": "Inti dalam",
+    "regolith": "Regolit",
+    "megareg": "Megaregolit",
+    "anorth": "Kerak anortosit",
+    "mmantle": "Mantel Bulan",
+    "mcore": "Inti Bulan",
+    "rdust": "Debu merah",
+    "permafr": "Permafrost",
+    "mbasalt": "Basal Mars",
+    "rmantle": "Mantel Mars",
+    "rcore": "Inti Mars",
+    "vlava": "Dataran lava",
+    "vbasalt": "Basal Venus",
+    "vlitho": "Litosfer",
+    "vmantle": "Mantel Venus",
+    "vcore": "Inti Venus",
+    "nclouds": "Awan metana",
+    "nhydro": "Laut hidrogen",
+    "nice": "Mantel es",
+    "ndiamond": "Hujan berlian",
+    "ncore": "Inti berbatu",
+    "jclouds": "Puncak awan",
+    "jstorm": "Bintik Merah Besar",
+    "jhydro": "Hidrogen cair",
+    "jmetal": "Hidrogen metalik",
+    "jcore": "Inti Jupiter",
+    "photo": "Fotosfer",
+    "convect": "Zona konveksi",
+    "radiat": "Zona radiatif",
+    "fusion": "Inti fusi"
   },
   "tools": {
     "spoon": "Sendok",
@@ -182,6 +211,180 @@
       "Kristal inti",
       "Matahari kecil",
       "Jantung Bumi"
+    ],
+    "regolith": [
+      "Batu Bulan",
+      "Jejak kaki",
+      "Bendera tertancap",
+      "Keju hijau"
+    ],
+    "megareg": [
+      "Baut hilang",
+      "Satelit mati",
+      "Sepatu bot Bulan",
+      "Pendarat jatuh"
+    ],
+    "anorth": [
+      "Kerikil putih",
+      "Kristal Bulan",
+      "Teleskop terkubur",
+      "Mata biru"
+    ],
+    "mmantle": [
+      "Kaca gelap",
+      "Magma panas",
+      "Saturnus mini",
+      "Alien Bulan"
+    ],
+    "mcore": [
+      "Magnet besi",
+      "Berlian Bulan",
+      "Bulan purnama",
+      "Bulan baru"
+    ],
+    "rdust": [
+      "Pusaran debu",
+      "Kacang kaleng",
+      "Rover tua",
+      "Wahana hilang"
+    ],
+    "permafr": [
+      "Balok es",
+      "Mikroba Mars",
+      "DNA alien",
+      "Fosil ikan"
+    ],
+    "mbasalt": [
+      "Basal hitam",
+      "Batu magnet",
+      "Kerikil Olympus",
+      "Wajah Mars"
+    ],
+    "rmantle": [
+      "Gunung api mati",
+      "Kristal merah",
+      "Semburan mantel",
+      "Naga pasir"
+    ],
+    "rcore": [
+      "Gir berkarat",
+      "Berlian Mars",
+      "Kerikil bercincin",
+      "Si hijau kecil"
+    ],
+    "vlava": [
+      "Lava segar",
+      "Gelembung asam",
+      "Wahana meleleh",
+      "Mahkota Venus"
+    ],
+    "vbasalt": [
+      "Basal panas",
+      "Botol belerang",
+      "Bola berawan",
+      "Cincin lebur"
+    ],
+    "vlitho": [
+      "Batu magnet",
+      "Kristal tekanan",
+      "Kunci kuno",
+      "Kalajengking lava"
+    ],
+    "vmantle": [
+      "Api mantel",
+      "Labu alkemis",
+      "Ular magma",
+      "Naga Venus"
+    ],
+    "vcore": [
+      "Petir inti",
+      "Berlian inti",
+      "Matahari kecil",
+      "Ratu Venus"
+    ],
+    "nclouds": [
+      "Serat sirus",
+      "Mata badai",
+      "Layangan hilang",
+      "Paus langit"
+    ],
+    "nhydro": [
+      "Gelembung hidrogen",
+      "Pecahan es",
+      "Labu kedalaman",
+      "Putri duyung"
+    ],
+    "nice": [
+      "Kepingan salju",
+      "Kristal biru",
+      "Es purba",
+      "Kraken es"
+    ],
+    "ndiamond": [
+      "Tetes berlian",
+      "Berlian biru",
+      "Mahkota berlian",
+      "Trisula Neptunus"
+    ],
+    "ncore": [
+      "Batu inti",
+      "Magnet inti",
+      "Galaksi saku",
+      "Gurita kedalaman"
+    ],
+    "jclouds": [
+      "Awan amonia",
+      "Balon cuaca",
+      "Parasut hilang",
+      "Elang badai"
+    ],
+    "jstorm": [
+      "Spiral badai",
+      "Petir Jupiter",
+      "Tetes merah",
+      "Mata Bintik"
+    ],
+    "jhydro": [
+      "Mutiara hidrogen",
+      "Botol tekanan",
+      "Ombak dalam",
+      "Paus hidrogen"
+    ],
+    "jmetal": [
+      "Magnet logam",
+      "Gir raksasa",
+      "Baut emas",
+      "Robot inti"
+    ],
+    "jcore": [
+      "Jantung batu",
+      "Berlian Jupiter",
+      "Bintang gagal",
+      "Mahkota Jupiter"
+    ],
+    "photo": [
+      "Suar surya",
+      "Bintik matahari",
+      "Kacamata meleleh",
+      "Bulu feniks"
+    ],
+    "convect": [
+      "Gelembung plasma",
+      "Termometer pecah",
+      "Petir surya",
+      "Burung api"
+    ],
+    "radiat": [
+      "Foton nyasar",
+      "Cahaya purba",
+      "Kilatan terang",
+      "Jin cahaya"
+    ],
+    "fusion": [
+      "Atom helium",
+      "Berlian bintang",
+      "Bintang baru lahir",
+      "Trofi Matahari"
     ]
   },
   "oceans": {
@@ -237,7 +440,36 @@
     "m_diamond": "Berlian",
     "m_ocore": "Inti luar",
     "m_icore": "Inti dalam",
-    "m_center": "Pusat Bumi"
+    "m_center": "Pusat Bumi",
+    "m_moon_reg": "Megaregolit",
+    "m_moon_crust": "Kerak Bulan",
+    "m_moon_mantle": "Mantel Bulan",
+    "m_moon_core": "Inti Bulan",
+    "m_moon_center": "Pusat Bulan",
+    "m_mars_ice": "Permafrost",
+    "m_mars_basalt": "Basal",
+    "m_mars_olympus": "Olympus Mons",
+    "m_mars_mantle": "Mantel Mars",
+    "m_mars_center": "Pusat Mars",
+    "m_venus_plains": "Dataran lava",
+    "m_venus_crust": "Kerak Venus",
+    "m_venus_mantle": "Mantel Venus",
+    "m_venus_core": "Inti Venus",
+    "m_venus_center": "Pusat Venus",
+    "m_nep_wind": "Angin badai",
+    "m_nep_ice": "Mantel es",
+    "m_nep_diamond": "Hujan berlian",
+    "m_nep_core": "Inti berbatu",
+    "m_nep_center": "Pusat Neptunus",
+    "m_jup_storm": "Bintik Merah Besar",
+    "m_jup_ocean": "Lautan hidrogen",
+    "m_jup_metal": "Hidrogen metalik",
+    "m_jup_core": "Inti Jupiter",
+    "m_jup_center": "Pusat Jupiter",
+    "m_sun_photo": "Fotosfer",
+    "m_sun_convect": "Zona konveksi",
+    "m_sun_core": "Inti fusi",
+    "m_sun_center": "Pusat Matahari"
   },
   "quests": "Misi harian",
   "quest_taps": "Ketuk {n} kali",
@@ -285,5 +517,50 @@
   "country_next": "Ganti berikutnya: {d}",
   "cloud_restored": "Progres dipulihkan dari cloud",
   "season_done_title": "Umat manusia menembus Bumi!",
-  "season_done_body": "Terima kasih kepada negara-negara teratas. Semua menggali ×2 selama {h} jam, lalu musim baru dimulai."
+  "season_done_body": "Terima kasih kepada negara-negara teratas. Semua menggali ×2 selama {h} jam, lalu musim baru dimulai.",
+  "dug_through_world": "Kamu menembus {w}!",
+  "next_world": "Dunia berikutnya",
+  "dig_world": "Gali {w}",
+  "world_harder": "Batu ×{x} lebih keras daripada di sini, kamu ×{m} lebih kuat daripada di awal.",
+  "lap": "Putaran {n}",
+  "far_side_of": "sisi jauh {w}",
+  "to_center_of": "ke pusat {w}",
+  "worlds": {
+    "earth": "Bumi",
+    "moon": "Bulan",
+    "mars": "Mars",
+    "venus": "Venus",
+    "neptune": "Neptunus",
+    "jupiter": "Jupiter",
+    "sun": "Matahari"
+  },
+  "m_moon_reg": "15 m. Di bawah debu: batuan yang remuk oleh empat miliar tahun tumbukan.",
+  "m_moon_crust": "2 km. Kerak pucat yang membuat Bulan bersinar.",
+  "m_moon_mantle": "50 km. Kerak Bulan tembus. Gravitasi seperenam, menggalinya sama saja.",
+  "m_moon_core": "1.400 km. Ternyata Bulan punya inti besi mungil.",
+  "m_moon_center": "1.737 km. PUSAT BULAN. Sekarang naik ke sisi jauh, yang tak pernah dilihat siapa pun dari Bumi.",
+  "m_mars_ice": "20 m. Permafrost. Air di Mars lebih banyak daripada yang orang kira.",
+  "m_mars_basalt": "500 m. Batuan vulkanik tua. Mars pernah punya lava.",
+  "m_mars_olympus": "21,9 km. Olympus Mons, gunung api tertinggi di Tata Surya, muat di lubangmu.",
+  "m_mars_mantle": "50 km. Kerak Mars lebih tebal daripada kerak Bumi. Kamu sudah menembusnya.",
+  "m_mars_center": "3.390 km. PUSAT MARS. Setengah jalan. Gali ke atas!",
+  "m_venus_plains": "10 m. Permukaan: 465 °C dan 90 atmosfer. Sekopmu sedikit meleleh.",
+  "m_venus_crust": "500 m. Basal muda. Belum lama ini Venus melapisi ulang permukaannya dengan lava.",
+  "m_venus_mantle": "60 km. Kerak kembaran jahat Bumi tembus.",
+  "m_venus_core": "3.000 km. Inti Venus. Mungkin cair. Tak ada yang tahu pasti.",
+  "m_venus_center": "6.052 km. PUSAT VENUS. Setengah jalan.",
+  "m_nep_wind": "1 km. Angin 2.000 km/jam, yang tercepat di Tata Surya.",
+  "m_nep_ice": "5.000 km. Mantel es: air dan amonia yang panas dan padat, bukan salju.",
+  "m_nep_diamond": "10.000 km. Di sini benar-benar turun hujan berlian.",
+  "m_nep_core": "20.000 km. Inti berbatu seukuran Bumi.",
+  "m_nep_center": "24.622 km. PUSAT NEPTUNUS. Setengah jalan.",
+  "m_jup_storm": "50 km. Bintik Merah Besar: badai yang lebih besar dari Bumi, mengamuk selama berabad-abad.",
+  "m_jup_ocean": "1.000 km. Tak ada permukaan. Gasnya begitu saja menjadi cair.",
+  "m_jup_metal": "20.000 km. Hidrogen metalik: tekanannya begitu tinggi sampai hidrogen berperilaku seperti logam.",
+  "m_jup_core": "60.000 km. Inti yang kabur, 25 kali massa Bumi.",
+  "m_jup_center": "69.911 km. PUSAT JUPITER. Setengah jalan. Naik lewat sisi satunya.",
+  "m_sun_photo": "500 km. Fotosfer tembus, lapisan yang membuat siang terang.",
+  "m_sun_convect": "200.000 km. Zona konveksi: plasma mendidih seperti panci.",
+  "m_sun_core": "500.000 km. Inti. 15 juta derajat. Fusi.",
+  "m_sun_center": "696.000 km. PUSAT MATAHARI. Tak ada yang lebih dalam. Setengah jalan naik ke sisi jauh."
 }

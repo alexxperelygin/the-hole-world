@@ -65,7 +65,7 @@
   "breakthrough": "You dug through the whole planet!",
   "came_out": "Starting from {from}, you came out in:",
   "splash": "SPLASH!",
-  "reward": "Reward: +50% to everything, forever. Your collection stays.",
+  "reward": "Reward: ×{x} to everything, forever. Your collection stays.",
   "dig_again": "Dig again",
   "share": "Share",
   "copy": "Copy text",
@@ -98,7 +98,36 @@
     "umantle": "Upper mantle",
     "lmantle": "Lower mantle",
     "ocore": "Outer core",
-    "icore": "Inner core"
+    "icore": "Inner core",
+    "regolith": "Regolith",
+    "megareg": "Megaregolith",
+    "anorth": "Anorthosite crust",
+    "mmantle": "Lunar mantle",
+    "mcore": "Lunar core",
+    "rdust": "Red dust",
+    "permafr": "Permafrost",
+    "mbasalt": "Martian basalt",
+    "rmantle": "Martian mantle",
+    "rcore": "Martian core",
+    "vlava": "Lava plains",
+    "vbasalt": "Venusian basalt",
+    "vlitho": "Lithosphere",
+    "vmantle": "Venusian mantle",
+    "vcore": "Venusian core",
+    "nclouds": "Methane clouds",
+    "nhydro": "Hydrogen sea",
+    "nice": "Ice mantle",
+    "ndiamond": "Diamond rain",
+    "ncore": "Rocky core",
+    "jclouds": "Cloud tops",
+    "jstorm": "Great Red Spot",
+    "jhydro": "Liquid hydrogen",
+    "jmetal": "Metallic hydrogen",
+    "jcore": "Jovian core",
+    "photo": "Photosphere",
+    "convect": "Convection zone",
+    "radiat": "Radiative zone",
+    "fusion": "Fusion core"
   },
   "tools": {
     "spoon": "Spoon",
@@ -182,6 +211,180 @@
       "Core crystal",
       "Tiny sun",
       "Heart of the Earth"
+    ],
+    "regolith": [
+      "Moon rock",
+      "Footprint",
+      "Planted flag",
+      "Green cheese"
+    ],
+    "megareg": [
+      "Lost bolt",
+      "Dead satellite",
+      "Moon boot",
+      "Crashed lander"
+    ],
+    "anorth": [
+      "White pebble",
+      "Moon crystal",
+      "Buried telescope",
+      "Blue eye"
+    ],
+    "mmantle": [
+      "Dark glass",
+      "Hot magma",
+      "Tiny Saturn",
+      "Moon alien"
+    ],
+    "mcore": [
+      "Iron magnet",
+      "Moon diamond",
+      "Full moon",
+      "New moon"
+    ],
+    "rdust": [
+      "Dust devil",
+      "Canned beans",
+      "Old rover",
+      "Lost probe"
+    ],
+    "permafr": [
+      "Ice block",
+      "Martian microbe",
+      "Alien DNA",
+      "Fossil fish"
+    ],
+    "mbasalt": [
+      "Black basalt",
+      "Lodestone",
+      "Olympus pebble",
+      "Face of Mars"
+    ],
+    "rmantle": [
+      "Dead volcano",
+      "Red crystal",
+      "Mantle plume",
+      "Sand dragon"
+    ],
+    "rcore": [
+      "Rusty gear",
+      "Mars diamond",
+      "Ringed pebble",
+      "Little green one"
+    ],
+    "vlava": [
+      "Fresh lava",
+      "Acid bubble",
+      "Melted probe",
+      "Crown of Venus"
+    ],
+    "vbasalt": [
+      "Hot basalt",
+      "Sulfur vial",
+      "Cloudy orb",
+      "Molten ring"
+    ],
+    "vlitho": [
+      "Lodestone",
+      "Pressure crystal",
+      "Ancient key",
+      "Lava scorpion"
+    ],
+    "vmantle": [
+      "Mantle fire",
+      "Alchemist's flask",
+      "Magma serpent",
+      "Venus dragon"
+    ],
+    "vcore": [
+      "Core lightning",
+      "Core diamond",
+      "Little sun",
+      "Queen of Venus"
+    ],
+    "nclouds": [
+      "Cirrus wisp",
+      "Storm eye",
+      "Lost kite",
+      "Sky whale"
+    ],
+    "nhydro": [
+      "Hydrogen bubble",
+      "Ice shard",
+      "Deep flask",
+      "Mermaid"
+    ],
+    "nice": [
+      "Snowflake",
+      "Blue crystal",
+      "Ancient ice",
+      "Ice kraken"
+    ],
+    "ndiamond": [
+      "Diamond drop",
+      "Blue diamond",
+      "Diamond crown",
+      "Trident of Neptune"
+    ],
+    "ncore": [
+      "Core rock",
+      "Core magnet",
+      "Pocket galaxy",
+      "Deep octopus"
+    ],
+    "jclouds": [
+      "Ammonia cloud",
+      "Weather balloon",
+      "Lost parachute",
+      "Storm eagle"
+    ],
+    "jstorm": [
+      "Storm spiral",
+      "Jovian lightning",
+      "Red drop",
+      "Eye of the Spot"
+    ],
+    "jhydro": [
+      "Hydrogen pearl",
+      "Pressure vial",
+      "Inner wave",
+      "Hydrogen whale"
+    ],
+    "jmetal": [
+      "Metal magnet",
+      "Giant gear",
+      "Golden bolt",
+      "Core robot"
+    ],
+    "jcore": [
+      "Rocky heart",
+      "Jovian diamond",
+      "Failed star",
+      "Crown of Jupiter"
+    ],
+    "photo": [
+      "Solar flare",
+      "Sun spot",
+      "Melted shades",
+      "Phoenix feather"
+    ],
+    "convect": [
+      "Plasma bubble",
+      "Broken thermometer",
+      "Solar lightning",
+      "Fire bird"
+    ],
+    "radiat": [
+      "Stray photon",
+      "Ancient light",
+      "Bright flash",
+      "Light genie"
+    ],
+    "fusion": [
+      "Helium atom",
+      "Star diamond",
+      "Newborn star",
+      "Trophy of the Sun"
     ]
   },
   "oceans": {
@@ -237,7 +440,36 @@
     "m_diamond": "Diamonds",
     "m_ocore": "Outer core",
     "m_icore": "Inner core",
-    "m_center": "Center of the Earth"
+    "m_center": "Center of the Earth",
+    "m_moon_reg": "Megaregolith",
+    "m_moon_crust": "Lunar crust",
+    "m_moon_mantle": "Lunar mantle",
+    "m_moon_core": "Lunar core",
+    "m_moon_center": "Center of the Moon",
+    "m_mars_ice": "Permafrost",
+    "m_mars_basalt": "Basalt",
+    "m_mars_olympus": "Olympus Mons",
+    "m_mars_mantle": "Martian mantle",
+    "m_mars_center": "Center of Mars",
+    "m_venus_plains": "Lava plains",
+    "m_venus_crust": "Venusian crust",
+    "m_venus_mantle": "Venusian mantle",
+    "m_venus_core": "Venusian core",
+    "m_venus_center": "Center of Venus",
+    "m_nep_wind": "Storm winds",
+    "m_nep_ice": "Ice mantle",
+    "m_nep_diamond": "Diamond rain",
+    "m_nep_core": "Rocky core",
+    "m_nep_center": "Center of Neptune",
+    "m_jup_storm": "Great Red Spot",
+    "m_jup_ocean": "Hydrogen ocean",
+    "m_jup_metal": "Metallic hydrogen",
+    "m_jup_core": "Jovian core",
+    "m_jup_center": "Center of Jupiter",
+    "m_sun_photo": "Photosphere",
+    "m_sun_convect": "Convection zone",
+    "m_sun_core": "Fusion core",
+    "m_sun_center": "Center of the Sun"
   },
   "quests": "Daily quests",
   "quest_taps": "Tap {n} times",
@@ -285,5 +517,50 @@
   "country_next": "Next change: {d}",
   "cloud_restored": "Progress restored from the cloud",
   "season_done_title": "Humanity dug through the Earth!",
-  "season_done_body": "Thanks to the top countries. Everyone digs ×2 for {h} hours, then a new season begins."
+  "season_done_body": "Thanks to the top countries. Everyone digs ×2 for {h} hours, then a new season begins.",
+  "dug_through_world": "You dug through {w}!",
+  "next_world": "Next world",
+  "dig_world": "Dig into {w}",
+  "world_harder": "Rock ×{x} harder than here, you ×{m} stronger than at the start.",
+  "lap": "Lap {n}",
+  "far_side_of": "the far side of {w}",
+  "to_center_of": "to the center of {w}",
+  "worlds": {
+    "earth": "Earth",
+    "moon": "the Moon",
+    "mars": "Mars",
+    "venus": "Venus",
+    "neptune": "Neptune",
+    "jupiter": "Jupiter",
+    "sun": "the Sun"
+  },
+  "m_moon_reg": "15 m. Below the dust: rock shattered by four billion years of impacts.",
+  "m_moon_crust": "2 km. The pale crust that makes the Moon shine.",
+  "m_moon_mantle": "50 km. Through the lunar crust. One sixth of the gravity, the same digging.",
+  "m_moon_core": "1,400 km. The Moon has a tiny iron core after all.",
+  "m_moon_center": "1,737 km. THE CENTER OF THE MOON. Now up to the far side, which no one on Earth ever sees.",
+  "m_mars_ice": "20 m. Permafrost. There is more water on Mars than people think.",
+  "m_mars_basalt": "500 m. Old volcanic rock. Mars had lava once.",
+  "m_mars_olympus": "21.9 km. Olympus Mons, the tallest volcano in the Solar System, would fit in your hole.",
+  "m_mars_mantle": "50 km. The crust of Mars is thicker than Earth's. You are through it.",
+  "m_mars_center": "3,390 km. THE CENTER OF MARS. Halfway. Dig up!",
+  "m_venus_plains": "10 m. Surface: 465 °C and 90 atmospheres. Your shovel is melting slightly.",
+  "m_venus_crust": "500 m. Young basalt. Venus resurfaced itself with lava not long ago.",
+  "m_venus_mantle": "60 km. Through the crust of Earth's evil twin.",
+  "m_venus_core": "3,000 km. The core of Venus. Probably liquid. Nobody knows for sure.",
+  "m_venus_center": "6,052 km. THE CENTER OF VENUS. Halfway.",
+  "m_nep_wind": "1 km. Wind at 2,000 km/h, the fastest in the Solar System.",
+  "m_nep_ice": "5,000 km. The ice mantle: hot, dense water and ammonia, not snow.",
+  "m_nep_diamond": "10,000 km. It literally rains diamonds here.",
+  "m_nep_core": "20,000 km. A rocky core the size of the Earth.",
+  "m_nep_center": "24,622 km. THE CENTER OF NEPTUNE. Halfway.",
+  "m_jup_storm": "50 km. The Great Red Spot: a storm bigger than Earth, raging for centuries.",
+  "m_jup_ocean": "1,000 km. No surface. The gas just becomes liquid.",
+  "m_jup_metal": "20,000 km. Metallic hydrogen: pressure so high hydrogen behaves like a metal.",
+  "m_jup_core": "60,000 km. A fuzzy core, 25 times the mass of Earth.",
+  "m_jup_center": "69,911 km. THE CENTER OF JUPITER. Halfway. Up through the other side.",
+  "m_sun_photo": "500 km. Through the photosphere, the layer that makes daylight.",
+  "m_sun_convect": "200,000 km. The convection zone: plasma boiling like a pot.",
+  "m_sun_core": "500,000 km. The core. 15 million degrees. Fusion.",
+  "m_sun_center": "696,000 km. THE CENTER OF THE SUN. Nothing is deeper. Halfway up to the far side."
 }

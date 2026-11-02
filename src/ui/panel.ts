@@ -1,8 +1,8 @@
 /* Bottom panel: tools, helpers, finds, world. Re-rendered only when its signature changes. */
 import { CFG } from '../config';
-import { S } from '../state';
+import { S, W, worldNow } from '../state';
 import { t, tl, lang, fmtM, fmtN, fmtBig, nf, esc, countryName } from '../i18n';
-import { tapPow, idleRate, mult, helperCost } from '../economy';
+import { tapPow, idleRate, mult, helperCost, hardAt, metersPerTap, metersPerSec } from '../economy';
 import { worldSnapshot, isOnline, type WorldRow } from '../net';
 import { popOf } from '../population';
 import { friendsMult } from '../economy';
@@ -12,7 +12,6 @@ import { bumpTab } from './motion';
 import { claimable, isDone, kindOf, secsToMidnight } from '../quests';
 
 const $ = <T extends HTMLElement = HTMLElement>(s: string) => document.querySelector(s) as T;
-const L = CFG.layers, NL = L.length;
 export let tab = 'tools';
 export type RankMode = 'all' | 'today' | 'capita';
 export let rankMode: RankMode = 'all';
@@ -37,38 +36,39 @@ export function renderPane(force: boolean) {
 function renderTools() {
   const p = $('#pane-tools'); const cur = CFG.tools[S.tool], nx = CFG.tools[S.tool + 1];
   let h = `<div class="sec-label">${esc(t('current'))}</div>
-    <div class="row cur own"><div class="re">${em(cur.e)}</div><div><div class="rn">${esc(t('tools.' + cur.id))}</div><div class="rs">${esc(fmtM(tapPow(S)))} ${esc(t('per_tap'))}</div></div><div></div></div>`;
+    <div class="row cur own"><div class="re">${em(cur.e)}</div><div><div class="rn">${esc(t('tools.' + cur.id))}</div><div class="rs">${esc(fmtM(metersPerTap(S)))} ${esc(t('per_tap'))}</div></div><div></div></div>`;
   if (nx) {
     const gain = nx.pow / cur.pow;
     h += `<div class="sec-label">${esc(t('next_tool'))}</div>
-      <div class="row"><div class="re">${em(nx.e)}</div><div><div class="rn">${esc(t('tools.' + nx.id))}</div><div class="rs">${esc(fmtM(nx.pow * mult(S)))} ${esc(t('per_tap'))} <em>×${esc(nf(gain, 1))}</em></div></div>
+      <div class="row"><div class="re">${em(nx.e)}</div><div><div class="rn">${esc(t('tools.' + nx.id))}</div><div class="rs">${esc(fmtM(nx.pow * mult(S) / hardAt(S)))} ${esc(t('per_tap'))} <em>×${esc(nf(gain, 1))}</em></div></div>
       <button class="buy" type="button" data-buy="tool" data-cost="${nx.cost}">${coinHTML}<span>${esc(fmtN(nx.cost))}</span></button></div>`;
   }
   h += `<div class="tool-strip" aria-hidden="true">` + CFG.tools.map((x, i) => `<span class="${i > S.tool + 1 ? 'no' : ''}">${i > S.tool + 1 ? '?' : em(x.e)}</span>`).join('') + `</div>`;
   p.innerHTML = h;
 }
 function renderHelpers() {
-  const p = $('#pane-helpers'); let h = `<div class="sec-label">${esc(t('tab_helpers'))} · ${esc(fmtM(idleRate(S)))}${esc(t('per_sec'))}</div>`;
+  const p = $('#pane-helpers'); let h = `<div class="sec-label">${esc(t('tab_helpers'))} · ${esc(fmtM(metersPerSec(S)))}${esc(t('per_sec'))}</div>`;
   CFG.helpers.forEach((x, i) => {
     if (i >= S.seenH + 1) return;
     const locked = i >= S.seenH;
     if (locked) { h += `<div class="row locked"><div class="re">${em(x.e)}</div><div><div class="rn">???</div><div class="rs">${esc(t('locked'))}</div></div><div></div></div>`; return; }
     const cost = helperCost(i, S.helpers[i]);
-    h += `<div class="row ${S.helpers[i] ? 'own' : ''} ${i >= shownH ? 'reveal' : ''}" style="--i:${i}"><div class="re">${em(x.e)}</div><div><div class="rn">${esc(t('helpers.' + x.id))}<span class="count">${S.helpers[i] ? '×' + S.helpers[i] : ''}</span></div><div class="rs">+${esc(fmtM(x.rate * mult(S)))}${esc(t('per_sec'))}</div></div>
+    h += `<div class="row ${S.helpers[i] ? 'own' : ''} ${i >= shownH ? 'reveal' : ''}" style="--i:${i}"><div class="re">${em(x.e)}</div><div><div class="rn">${esc(t('helpers.' + x.id))}<span class="count">${S.helpers[i] ? '×' + S.helpers[i] : ''}</span></div><div class="rs">+${esc(fmtM(x.rate * mult(S) / hardAt(S)))}${esc(t('per_sec'))}</div></div>
       <button class="buy" type="button" data-buy="h" data-i="${i}" data-cost="${cost}">${coinHTML}<span>${esc(fmtN(cost))}</span></button></div>`;
   });
-  const capH = (S.crew ? CFG.offlineCapCrew : CFG.offlineCapFree) / 3600; const rate = idleRate(S);
+  const capH = (S.crew ? CFG.offlineCapCrew : CFG.offlineCapFree) / 3600; const rate = metersPerSec(S);
   if (rate > 0) h += `<div class="note">${em('😴')} ${esc(t('offline_preview', { h: capH }))} · +${esc(fmtM(rate * capH * 3600))}${S.crew ? '' : ` <button class="link" type="button" data-act="gold" data-src="offline_preview">${esc(t('offline_gold'))}</button>`}</div>`;
   p.innerHTML = h; shownH = Math.max(shownH, S.seenH);
 }
 function renderFinds() {
-  const p = $('#pane-finds'); const total = NL * 4; const got = Object.keys(S.finds).length;
-  let h = `<div class="finds-head"><b>${esc(t('finds_title'))}</b><span>${got} / ${total}</span></div><div class="hint-text">${esc(t('finds_hint'))}</div>`;
+  const p = $('#pane-finds'); const wc = W(), L = wc.layers; const total = L.length * 4; const got = L.reduce((n, l) => { for (let r = 0; r < 4; r++) if (S.finds[l.id + ':' + r]) n++; return n; }, 0);
+  const w = worldNow();
+  let h = `<div class="finds-head"><b>${S.world || S.lap ? em(w.e) + ' ' : ''}${esc(t('finds_title'))}</b><span>${got} / ${total}</span></div><div class="hint-text">${esc(t('finds_hint'))}</div>`;
   L.forEach(l => {
     h += `<div class="fl"><div class="ln">${esc(t('layers.' + l.id))}</div>`;
     const names = tl('finds.' + l.id);
     for (let r = 0; r < 4; r++) { const n = S.finds[l.id + ':' + r]; const col = CFG.rarity[r].color;
-      h += n ? `<div class="cell got" style="--rc:${col}" title="${esc(names[r] || '')}">${em(CFG.finds[l.id][r])}<i>${n > 1 ? n : ''}</i></div>` : `<div class="cell" style="--rc:${col}">?</div>`; }
+      h += n ? `<div class="cell got" style="--rc:${col}" title="${esc(names[r] || '')}">${em(wc.finds[l.id][r])}<i>${n > 1 ? n : ''}</i></div>` : `<div class="cell" style="--rc:${col}">?</div>`; }
     h += `</div>`;
   });
   p.innerHTML = h;

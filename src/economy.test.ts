@@ -23,16 +23,20 @@ describe('layerAt', () => {
   it('uses the layer value on the near side', () => {
     expect(layerAt(0).val).toBe(1);
     expect(layerAt(10).val).toBe(1.6);
-    expect(layerAt(2e6).val).toBe(20);
-    expect(layerAt(6e6).val).toBe(50);
+    expect(layerAt(2e6).val).toBe(45);
+    expect(layerAt(6e6).val).toBe(250);
   });
-  it('mirrors layers on the far side and pays 50 × 1.5^k', () => {
+  it('hardness: the first kilometre costs 1 effort per meter, the inner core 150 (Phase 5)', () => {
+    expect(layerAt(0).hard).toBe(1); expect(layerAt(999).hard).toBe(1); expect(layerAt(1000).hard).toBe(2); expect(layerAt(6e6).hard).toBe(150);
+    expect(layerAt(CFG.through - 1).hard).toBe(1); // mirrored on the way up
+  });
+  it('mirrors layers on the far side and pays 250 × 1.5^k', () => {
     const justPast = layerAt(CFG.earthR + 1);
-    expect(justPast.far).toBe(true); expect(justPast.layer.id).toBe('icore'); expect(justPast.val).toBeCloseTo(50 * 1.5);
+    expect(justPast.far).toBe(true); expect(justPast.layer.id).toBe('icore'); expect(justPast.val).toBeCloseTo(250 * 1.5);
     const farMantle = layerAt(CFG.through - 100000); // 100 km from exit = upper mantle mirrored
-    expect(farMantle.layer.id).toBe('umantle'); expect(farMantle.val).toBeCloseTo(50 * Math.pow(1.5, NL - 5));
+    expect(farMantle.layer.id).toBe('umantle'); expect(farMantle.val).toBeCloseTo(250 * Math.pow(1.5, NL - 5));
     const exit = layerAt(CFG.through - 1);
-    expect(exit.layer.id).toBe('soil'); expect(exit.val).toBeCloseTo(50 * Math.pow(1.5, 9));
+    expect(exit.layer.id).toBe('soil'); expect(exit.val).toBeCloseTo(250 * Math.pow(1.5, 9));
   });
   it('segments run 0..17 across the whole path and clamps out of range', () => {
     expect(layerAt(-5).seg).toBe(0);
@@ -51,13 +55,13 @@ describe('layerAt', () => {
 });
 
 describe('multipliers', () => {
-  it('prestige: +50% per star, crew ×2 (SPEC §2.3)', () => {
-    expect(prestigeMult(0)).toBe(1); expect(prestigeMult(1)).toBe(1.5); expect(prestigeMult(4)).toBe(3);
-    expect(mult(st({ stars: 2, crew: true }))).toBe(4);
+  it('prestige: ×2 per star (Phase 5), crew ×2', () => {
+    expect(prestigeMult(0)).toBe(1); expect(prestigeMult(1)).toBe(2); expect(prestigeMult(4)).toBe(16);
+    expect(mult(st({ stars: 2, crew: true }))).toBe(8);
   });
   it('tap power = tool.pow × mult; idle = Σ n × rate × mult', () => {
     expect(tapPow(st())).toBeCloseTo(0.1);
-    expect(tapPow(st({ tool: 1, stars: 1 }))).toBeCloseTo(0.45);
+    expect(tapPow(st({ tool: 1, stars: 1 }))).toBeCloseTo(0.6);
     const s = st({ helpers: [2, 1, 0, 0, 0, 0, 0, 0], crew: true });
     expect(idleRate(s)).toBeCloseTo((2 * 0.1 + 0.4) * 2);
   });
@@ -94,7 +98,13 @@ describe('helper prices', () => {
 describe('dig', () => {
   it('earns meters × value of the layer where the stroke began', () => {
     const s = st({ depth: 2.9 }); const r = dig(s, 1);
-    expect(r.m).toBe(1); expect(r.coins).toBe(1); expect(s.depth).toBeCloseTo(3.9); expect(s.coins).toBe(1);
+    expect(r.m).toBe(1); expect(r.coins).toBe(1); expect(r.effort).toBe(1); expect(s.depth).toBeCloseTo(3.9); expect(s.coins).toBe(1);
+  });
+  it('hard rock: meters = effort / hard, coins = meters × val, the country gets the effort', () => {
+    const s = st({ depth: 1000 }); const r = dig(s, 10); // granite: hard 2, val 5
+    expect(r.m).toBe(5); expect(r.coins).toBe(25); expect(r.effort).toBe(10); expect(s.depth).toBe(1005);
+    const end = st({ depth: CFG.through - 2 }); const e = dig(end, 100); // soil on the way out: hard 1, only 2 m left
+    expect(e.m).toBe(2); expect(e.effort).toBe(2); expect(end.depth).toBe(CFG.through);
   });
   it('stops at the exit and ignores non-positive strokes', () => {
     const s = st({ depth: CFG.through - 5 }); const r = dig(s, 100);
@@ -130,14 +140,14 @@ describe('finds, nuggets, daily chest', () => {
     expect(pickRarity(0.92)).toBe(1); expect(pickRarity(0.93)).toBe(2); expect(pickRarity(0.995)).toBe(3); expect(pickRarity(1)).toBe(3);
   });
   it('find bonus = income × [8,25,90,400] s, floor 5', () => {
-    const s = st({ tool: 3, depth: 2000 }); // 2.5×4×4 = 40/s
-    expect(findBonus(s, 0)).toBeCloseTo(40 * 8); expect(findBonus(s, 3)).toBeCloseTo(40 * 400);
+    const s = st({ tool: 3, depth: 2000 }); // granite: 2.5 × 4 taps/s = 10 effort/s, / hard 2 × val 5 = 25 coins/s
+    expect(findBonus(s, 0)).toBeCloseTo(25 * 8); expect(findBonus(s, 3)).toBeCloseTo(25 * 400);
     expect(findBonus(st(), 0)).toBe(5);
   });
   it('daily chest = max(50, income × 60 × min(streak, 7))', () => {
     expect(dailyChest(st(), 1)).toBe(50);
     const s = st({ tool: 3, depth: 2000 });
-    expect(dailyChest(s, 3)).toBeCloseTo(40 * 60 * 3); expect(dailyChest(s, 30)).toBeCloseTo(40 * 60 * 7);
+    expect(dailyChest(s, 3)).toBeCloseTo(25 * 60 * 3); expect(dailyChest(s, 30)).toBeCloseTo(25 * 60 * 7);
   });
 });
 
@@ -150,7 +160,31 @@ describe('prestige', () => {
     expect(r.depth).toBe(0); expect(r.coins).toBe(0); expect(r.tool).toBe(0); expect(r.helpers).toEqual(CFG.helpers.map(() => 0));
     expect(r.seg).toBe(0); expect(r.ms).toEqual({}); expect(r.seenH).toBe(1);
     expect(r.finds).toEqual({ 'soil:0': 2 }); expect(r.lifetime).toBe(2e7); expect(r.country).toBe('RU'); expect(r.crew).toBe(true);
-    expect(mult(r)).toBe(2 * 2);
+    expect(mult(r)).toBe(4 * 2);
+    expect(r.world).toBe(1); expect(r.lap).toBe(0); // Earth → Moon
+  });
+  it('worlds: the list wraps into the next lap, each lap is lapHardMult harder', () => {
+    const n = CFG.worlds.length;
+    expect(E.nextWorld({ world: n - 1, lap: 0 })).toEqual({ world: 0, lap: 1 });
+    expect(E.nextWorld({ world: 2, lap: 3 })).toEqual({ world: 3, lap: 3 });
+    const moon = E.worldCfg(1, 0), earth2 = E.worldCfg(0, 1);
+    expect(moon.earthR).toBe(CFG.worlds[1].r); expect(moon.through).toBe(2 * CFG.worlds[1].r);
+    expect(moon.layers[0].id).toBe('regolith'); expect(moon.layers[0].hard).toBeCloseTo(1.5 * CFG.worlds[1].hardMult);
+    expect(earth2.layers[0].id).toBe('soil'); expect(earth2.layers[0].hard).toBeCloseTo(CFG.lapHardMult); expect(earth2.layers[3].hard).toBeCloseTo(2 * CFG.lapHardMult);
+    expect(E.worldCfg(1, 0)).toBe(moon); // cached
+    const s = st({ depth: 10, stars: 1 }); s.world = 1; // 10 m into the Moon's regolith with one star
+    expect(E.metersPerTap(s)).toBeCloseTo(0.1 * 2 / (1.5 * CFG.worlds[1].hardMult));
+  });
+  it('every world has finds and milestones for its layers, and milestones inside the radius', () => {
+    for (let i = 1; i < CFG.worlds.length; i++) { const w = CFG.worlds[i];
+      expect(w.layers.length).toBeGreaterThanOrEqual(4); expect(w.layers[0].top).toBe(0);
+      for (let j = 1; j < w.layers.length; j++) expect(w.layers[j].top).toBeGreaterThan(w.layers[j - 1].top);
+      for (const l of w.layers) { expect(w.finds[l.id]).toHaveLength(4); expect(l.hard).toBeGreaterThan(0); }
+      for (const m of w.milestones) expect(m.d).toBeLessThanOrEqual(w.r);
+      expect(w.layers[w.layers.length - 1].top).toBeLessThan(w.r);
+    }
+    const ids = CFG.layers.map(l => l.id).concat(...CFG.worlds.slice(1).map(w => w.layers.map(l => l.id)));
+    expect(new Set(ids).size).toBe(ids.length); // layer ids are unique across worlds (finds are keyed by them)
   });
   it('freshRun has one helper slot per helper in config', () => {
     expect(freshRun().helpers.length).toBe(CFG.helpers.length);

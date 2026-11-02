@@ -65,7 +65,7 @@
   "breakthrough": "Tu as traversé toute la planète !",
   "came_out": "Tu es ressorti ici. Départ : {from}",
   "splash": "PLOUF !",
-  "reward": "Récompense : +50 % sur tout, pour toujours. Ta collection reste.",
+  "reward": "Récompense : ×{x} sur tout, pour toujours. Ta collection reste.",
   "dig_again": "Recreuser",
   "share": "Partager",
   "copy": "Copier le texte",
@@ -98,7 +98,36 @@
     "umantle": "Manteau supérieur",
     "lmantle": "Manteau inférieur",
     "ocore": "Noyau externe",
-    "icore": "Noyau interne"
+    "icore": "Noyau interne",
+    "regolith": "Régolithe",
+    "megareg": "Mégarégolithe",
+    "anorth": "Croûte d'anorthosite",
+    "mmantle": "Manteau lunaire",
+    "mcore": "Noyau lunaire",
+    "rdust": "Poussière rouge",
+    "permafr": "Pergélisol",
+    "mbasalt": "Basalte martien",
+    "rmantle": "Manteau martien",
+    "rcore": "Noyau martien",
+    "vlava": "Plaines de lave",
+    "vbasalt": "Basalte vénusien",
+    "vlitho": "Lithosphère",
+    "vmantle": "Manteau vénusien",
+    "vcore": "Noyau vénusien",
+    "nclouds": "Nuages de méthane",
+    "nhydro": "Mer d'hydrogène",
+    "nice": "Manteau de glace",
+    "ndiamond": "Pluie de diamants",
+    "ncore": "Noyau rocheux",
+    "jclouds": "Sommet des nuages",
+    "jstorm": "Grande Tache rouge",
+    "jhydro": "Hydrogène liquide",
+    "jmetal": "Hydrogène métallique",
+    "jcore": "Noyau jovien",
+    "photo": "Photosphère",
+    "convect": "Zone convective",
+    "radiat": "Zone radiative",
+    "fusion": "Cœur de fusion"
   },
   "tools": {
     "spoon": "Cuillère",
@@ -182,6 +211,180 @@
       "Cristal du noyau",
       "Petit soleil",
       "Cœur de la Terre"
+    ],
+    "regolith": [
+      "Roche lunaire",
+      "Empreinte de pas",
+      "Drapeau planté",
+      "Fromage vert"
+    ],
+    "megareg": [
+      "Boulon perdu",
+      "Satellite mort",
+      "Botte lunaire",
+      "Module écrasé"
+    ],
+    "anorth": [
+      "Caillou blanc",
+      "Cristal lunaire",
+      "Télescope enterré",
+      "Œil bleu"
+    ],
+    "mmantle": [
+      "Verre sombre",
+      "Magma brûlant",
+      "Mini-Saturne",
+      "Alien lunaire"
+    ],
+    "mcore": [
+      "Aimant de fer",
+      "Diamant lunaire",
+      "Pleine lune",
+      "Nouvelle lune"
+    ],
+    "rdust": [
+      "Tourbillon de poussière",
+      "Boîte de haricots",
+      "Vieux rover",
+      "Sonde perdue"
+    ],
+    "permafr": [
+      "Bloc de glace",
+      "Microbe martien",
+      "ADN alien",
+      "Poisson fossile"
+    ],
+    "mbasalt": [
+      "Basalte noir",
+      "Magnétite",
+      "Caillou de l'Olympe",
+      "Visage de Mars"
+    ],
+    "rmantle": [
+      "Volcan mort",
+      "Cristal rouge",
+      "Panache du manteau",
+      "Dragon de sable"
+    ],
+    "rcore": [
+      "Engrenage rouillé",
+      "Diamant de Mars",
+      "Caillou à anneaux",
+      "Petit homme vert"
+    ],
+    "vlava": [
+      "Lave fraîche",
+      "Bulle d'acide",
+      "Sonde fondue",
+      "Couronne de Vénus"
+    ],
+    "vbasalt": [
+      "Basalte brûlant",
+      "Fiole de soufre",
+      "Orbe nuageux",
+      "Anneau en fusion"
+    ],
+    "vlitho": [
+      "Magnétite",
+      "Cristal de pression",
+      "Clé ancestrale",
+      "Scorpion de lave"
+    ],
+    "vmantle": [
+      "Feu du manteau",
+      "Fiole d'alchimiste",
+      "Serpent de magma",
+      "Dragon de Vénus"
+    ],
+    "vcore": [
+      "Éclair du noyau",
+      "Diamant du noyau",
+      "Petit soleil",
+      "Reine de Vénus"
+    ],
+    "nclouds": [
+      "Brin de cirrus",
+      "Œil de la tempête",
+      "Cerf-volant perdu",
+      "Baleine du ciel"
+    ],
+    "nhydro": [
+      "Bulle d'hydrogène",
+      "Éclat de glace",
+      "Fiole des abysses",
+      "Sirène"
+    ],
+    "nice": [
+      "Flocon de neige",
+      "Cristal bleu",
+      "Glace ancestrale",
+      "Kraken de glace"
+    ],
+    "ndiamond": [
+      "Goutte de diamant",
+      "Diamant bleu",
+      "Couronne de diamants",
+      "Trident de Neptune"
+    ],
+    "ncore": [
+      "Roche du noyau",
+      "Aimant du noyau",
+      "Galaxie de poche",
+      "Pieuvre des abysses"
+    ],
+    "jclouds": [
+      "Nuage d'ammoniac",
+      "Ballon-sonde",
+      "Parachute perdu",
+      "Aigle de tempête"
+    ],
+    "jstorm": [
+      "Spirale de tempête",
+      "Éclair jovien",
+      "Goutte rouge",
+      "Œil de la Tache"
+    ],
+    "jhydro": [
+      "Perle d'hydrogène",
+      "Fiole de pression",
+      "Vague intérieure",
+      "Baleine d'hydrogène"
+    ],
+    "jmetal": [
+      "Aimant métallique",
+      "Engrenage géant",
+      "Boulon d'or",
+      "Robot du noyau"
+    ],
+    "jcore": [
+      "Cœur rocheux",
+      "Diamant jovien",
+      "Étoile ratée",
+      "Couronne de Jupiter"
+    ],
+    "photo": [
+      "Éruption solaire",
+      "Tache solaire",
+      "Lunettes fondues",
+      "Plume de phénix"
+    ],
+    "convect": [
+      "Bulle de plasma",
+      "Thermomètre cassé",
+      "Éclair solaire",
+      "Oiseau de feu"
+    ],
+    "radiat": [
+      "Photon égaré",
+      "Lumière ancestrale",
+      "Éclat lumineux",
+      "Génie de lumière"
+    ],
+    "fusion": [
+      "Atome d'hélium",
+      "Diamant stellaire",
+      "Étoile nouveau-née",
+      "Trophée du Soleil"
     ]
   },
   "oceans": {
@@ -237,7 +440,36 @@
     "m_diamond": "Diamants",
     "m_ocore": "Noyau externe",
     "m_icore": "Noyau interne",
-    "m_center": "Centre de la Terre"
+    "m_center": "Centre de la Terre",
+    "m_moon_reg": "Mégarégolithe",
+    "m_moon_crust": "Croûte lunaire",
+    "m_moon_mantle": "Manteau lunaire",
+    "m_moon_core": "Noyau lunaire",
+    "m_moon_center": "Centre de la Lune",
+    "m_mars_ice": "Pergélisol",
+    "m_mars_basalt": "Basalte",
+    "m_mars_olympus": "Olympus Mons",
+    "m_mars_mantle": "Manteau martien",
+    "m_mars_center": "Centre de Mars",
+    "m_venus_plains": "Plaines de lave",
+    "m_venus_crust": "Croûte vénusienne",
+    "m_venus_mantle": "Manteau vénusien",
+    "m_venus_core": "Noyau vénusien",
+    "m_venus_center": "Centre de Vénus",
+    "m_nep_wind": "Vents de tempête",
+    "m_nep_ice": "Manteau de glace",
+    "m_nep_diamond": "Pluie de diamants",
+    "m_nep_core": "Noyau rocheux",
+    "m_nep_center": "Centre de Neptune",
+    "m_jup_storm": "Grande Tache rouge",
+    "m_jup_ocean": "Océan d'hydrogène",
+    "m_jup_metal": "Hydrogène métallique",
+    "m_jup_core": "Noyau jovien",
+    "m_jup_center": "Centre de Jupiter",
+    "m_sun_photo": "Photosphère",
+    "m_sun_convect": "Zone convective",
+    "m_sun_core": "Cœur de fusion",
+    "m_sun_center": "Centre du Soleil"
   },
   "quests": "Quêtes du jour",
   "quest_taps": "Tape {n} fois",
@@ -285,5 +517,50 @@
   "country_next": "Prochain changement : {d}",
   "cloud_restored": "Progression restaurée depuis le cloud",
   "season_done_title": "L'humanité a creusé la Terre de part en part !",
-  "season_done_body": "Merci aux pays leaders. Tout le monde creuse ×2 pendant {h} heures, puis une nouvelle saison commence."
+  "season_done_body": "Merci aux pays leaders. Tout le monde creuse ×2 pendant {h} heures, puis une nouvelle saison commence.",
+  "dug_through_world": "Tu as traversé {w} !",
+  "next_world": "Monde suivant",
+  "dig_world": "Creuse {w}",
+  "world_harder": "Roche ×{x} plus dure qu'ici, toi ×{m} plus fort qu'au départ.",
+  "lap": "Tour {n}",
+  "far_side_of": "{w}, l'autre côté",
+  "to_center_of": "jusqu'au centre : {w}",
+  "worlds": {
+    "earth": "la Terre",
+    "moon": "la Lune",
+    "mars": "Mars",
+    "venus": "Vénus",
+    "neptune": "Neptune",
+    "jupiter": "Jupiter",
+    "sun": "le Soleil"
+  },
+  "m_moon_reg": "15 m. Sous la poussière : de la roche broyée par quatre milliards d'années d'impacts.",
+  "m_moon_crust": "2 km. La croûte pâle qui fait briller la Lune.",
+  "m_moon_mantle": "50 km. Croûte lunaire percée. Six fois moins de gravité, autant de pelletées.",
+  "m_moon_core": "1 400 km. La Lune a finalement bien un petit noyau de fer.",
+  "m_moon_center": "1 737 km. LE CENTRE DE LA LUNE. Maintenant remonte vers la face cachée, que personne ne voit depuis la Terre.",
+  "m_mars_ice": "20 m. Pergélisol. Il y a plus d'eau sur Mars qu'on ne le croit.",
+  "m_mars_basalt": "500 m. Vieille roche volcanique. Mars a eu de la lave, autrefois.",
+  "m_mars_olympus": "21,9 km. Olympus Mons, le plus haut volcan du Système solaire, tiendrait dans ton trou.",
+  "m_mars_mantle": "50 km. La croûte de Mars est plus épaisse que celle de la Terre. Tu l'as percée.",
+  "m_mars_center": "3 390 km. LE CENTRE DE MARS. Mi-chemin. Creuse vers le haut !",
+  "m_venus_plains": "10 m. En surface : 465 °C et 90 atmosphères. Ta pelle fond légèrement.",
+  "m_venus_crust": "500 m. Basalte jeune. Vénus s'est refait une surface de lave il n'y a pas si longtemps.",
+  "m_venus_mantle": "60 km. Croûte percée : celle de la jumelle maléfique de la Terre.",
+  "m_venus_core": "3 000 km. Le noyau de Vénus. Probablement liquide. Personne n'en est sûr.",
+  "m_venus_center": "6 052 km. LE CENTRE DE VÉNUS. Mi-chemin.",
+  "m_nep_wind": "1 km. Des vents à 2 000 km/h, les plus rapides du Système solaire.",
+  "m_nep_ice": "5 000 km. Le manteau de glace : de l'eau et de l'ammoniac chauds et denses, pas de la neige.",
+  "m_nep_diamond": "10 000 km. Ici, il pleut littéralement des diamants.",
+  "m_nep_core": "20 000 km. Un noyau rocheux de la taille de la Terre.",
+  "m_nep_center": "24 622 km. LE CENTRE DE NEPTUNE. Mi-chemin.",
+  "m_jup_storm": "50 km. La Grande Tache rouge : une tempête plus grande que la Terre, qui fait rage depuis des siècles.",
+  "m_jup_ocean": "1 000 km. Pas de surface. Le gaz devient simplement liquide.",
+  "m_jup_metal": "20 000 km. Hydrogène métallique : une pression si forte que l'hydrogène se comporte comme un métal.",
+  "m_jup_core": "60 000 km. Un noyau flou, 25 fois la masse de la Terre.",
+  "m_jup_center": "69 911 km. LE CENTRE DE JUPITER. Mi-chemin. Remonte par l'autre côté.",
+  "m_sun_photo": "500 km. Photosphère percée, la couche qui fait la lumière du jour.",
+  "m_sun_convect": "200 000 km. La zone convective : du plasma qui bout comme une marmite.",
+  "m_sun_core": "500 000 km. Le cœur. 15 millions de degrés. Fusion.",
+  "m_sun_center": "696 000 km. LE CENTRE DU SOLEIL. Rien n'est plus profond. Mi-chemin vers l'autre côté."
 }
