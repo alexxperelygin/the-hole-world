@@ -11,7 +11,7 @@ import { isTelegram, openUrl, tg } from './platform/telegram';
 
 export function shareUrl(): string {
   if (isTelegram() && CFG.tgApp) return CFG.tgApp + (S.ref ? '?startapp=r_' + encodeURIComponent(S.ref) : '');
-  return CFG.shareUrl + '/' + (S.ref ? '?r=' + encodeURIComponent(S.ref) : '');
+  return CFG.shareUrl + '/' + (S.country ? S.country.toLowerCase() : '') + (S.ref ? '?r=' + encodeURIComponent(S.ref) : '');   // /<cc>: the preview shows the country's live rank (site/worker.ts)
 }
 export function shareText(): string { return t('share_text', { d: fmtM(S.best), f: flagOf(S.country), c: countryName(S.country) }); }
 export const shareFull = () => shareText() + ' ' + shareUrl();
